@@ -1,0 +1,7 @@
+[33mc9b35a9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/docker-mysql-setup[m[33m, [m[1;31morigin/feature/docker-mysql-setup[m[33m)[m feat: complete sprint 1 backend setup (docker, mysql schema, triggers, dto, entities, repositories)
+[33m715dc4e[m[33m ([m[1;31morigin/develop[m[33m)[m Merge pull request #4 from sofia-garcia30/feature/docker-mysql-setup
+[33m3132889[m feat: add MySQL init scripts with schema, triggers and Docker setup
+[33m3e73940[m feat: configure Docker MySQL connection for Bike-Shop backend
+[33m58e0d0f[m[33m ([m[1;32mdevelop[m[33m)[m Merge pull request #2 from sofia-garcia30/feature/configuracion-inicial
+[33m8414463[m configuración inicial del proyecto Spring Boot con MySQL, Docker y DTO
+[33m378b529[m Initial commit

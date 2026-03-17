@@ -1,35 +1,36 @@
 package com.bike.shop.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "bicicleta")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "bicicleta")
 public class Bicicleta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "codigo")
     private Integer codigo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String marca;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String modelo;
 
+    @Column(length = 50)
     private String tipo;
 
-    @Column(name = "precio_venta")
+    @Column(name = "precio_venta", nullable = false)
     private BigDecimal precioVenta;
 
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
-
-    @Column(name = "fecha_registro")
-    private LocalDateTime fechaRegistro;
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -33,4 +34,7 @@ public class Bicicleta {
 
     @Column(columnDefinition = "TEXT")
     private String descripcion;
+
+    @Column(name = "fecha_registro")
+    private LocalDateTime fechaRegistro;
 }

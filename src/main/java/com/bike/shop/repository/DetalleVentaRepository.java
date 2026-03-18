@@ -11,8 +11,8 @@ import java.util.List;
 public interface DetalleVentaRepository extends JpaRepository<DetalleVenta, Long> {
 
     List<DetalleVenta> findByVentaId(Long ventaId);
-    List<DetalleVenta> findByBicicletaId(Long bicicletaId);
+    List<DetalleVenta> findByBicicletaCodigo(Long bicicletaCodigo);
 
-    @Query("SELECT SUM(d.cantidad) FROM DetalleVenta d WHERE d.bicicleta.id = :bicicletaId")
-    Integer totalUnidadesVendidasPorBicicleta(@Param("bicicletaId") Long bicicletaId);
+    @Query("SELECT SUM(d.cantidad) FROM DetalleVenta d WHERE d.bicicleta.codigo = :bicicletaCodigo")
+    Integer totalUnidadesVendidasPorBicicleta(@Param("bicicletaCodigo") Long bicicletaCodigo);
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlertaStockDTO {
+public class AlertasStockDTO {
     private Integer id;
     private Integer codigoBicicleta;
     private String mensaje;

@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface InventarioRepository extends JpaRepository<Inventario, Long> {
+public interface InventarioRepository extends JpaRepository<Inventario, Integer> {
 
-    Optional<Inventario> findByBicicletaId(Long bicicletaId);
+    Optional<Inventario> findByBicicletaCodigo(Integer bicicletaCodigo);
     List<Inventario> findByUbicacionIgnoreCase(String ubicacion);
 
     @Query("SELECT i FROM Inventario i WHERE i.cantidad <= i.stockMinimo")

@@ -4,15 +4,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BicicletaDTO {
-    private Long id;
-    private String codigo;
+    private Integer codigo;
     private String marca;
     private String modelo;
     private String tipo;
-    private Double precioVenta;
+    private BigDecimal precioVenta;
     private String descripcion;
+    private LocalDateTime fechaRegistro;
 }

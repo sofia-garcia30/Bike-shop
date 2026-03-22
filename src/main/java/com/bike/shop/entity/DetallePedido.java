@@ -1,32 +1,34 @@
+// DETALLE_PEDIDO
 package com.bike.shop.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
-@Entity
-@Table(name = "alertas_stock")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlertasStock {
+@Entity
+@Table(name = "detalle_pedido")
+public class DetallePedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_pedido", nullable = false)
+    private Pedido pedido;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codigo_bicicleta", nullable = false)
     private Bicicleta bicicleta;
 
-    @Column(nullable = false, length = 255)
-    private String mensaje;
-
-    @Column(name = "fecha")
-    private LocalDateTime fecha;
-
     @Column(nullable = false)
-    private Boolean leido = false;
+    private Integer cantidad;
+
+    @Column(name = "precio_costo_unitario", nullable = false)
+    private BigDecimal precioCostoUnitario;
 }

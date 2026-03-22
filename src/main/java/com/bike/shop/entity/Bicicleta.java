@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -29,12 +27,21 @@ public class Bicicleta {
     @Column(length = 50)
     private String tipo;
 
+    @Column(name = "precio_costo", nullable = false)
+    private BigDecimal precioCosto;
+
     @Column(name = "precio_venta", nullable = false)
     private BigDecimal precioVenta;
 
+    @Column(nullable = false)
+    private Integer cantidad;
+
+    @Column(name = "stock_minimo")
+    private Integer stockMinimo;
+
+    @Column(name = "stock_maximo")
+    private Integer stockMaximo;
+
     @Column(columnDefinition = "TEXT")
     private String descripcion;
-
-    @Column(name = "fecha_registro")
-    private LocalDateTime fechaRegistro;
 }

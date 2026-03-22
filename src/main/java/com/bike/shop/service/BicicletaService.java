@@ -1,13 +1,11 @@
 package com.bike.shop.service;
 
-import com.bike.shop.dto.BicicletaDTO;
-import com.bike.shop.dto.InventarioDTO;
+import com.bike.shop.dto.request.BicicletaRequestDTO;
+import com.bike.shop.dto.response.BicicletaResponseDTO;
 import com.bike.shop.entity.Bicicleta;
-import com.bike.shop.entity.Inventario;
-import com.bike.shop.repository.BicicletaRepository;
-import com.bike.shop.repository.InventarioRepository;
 import com.bike.shop.exception.RecursoNoEncontradoException;
 import com.bike.shop.exception.ValidacionException;
+import com.bike.shop.repository.BicicletaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,154 +19,144 @@ import java.util.stream.Collectors;
 public class BicicletaService {
 
     private final BicicletaRepository bicicletaRepository;
-    private final InventarioRepository inventarioRepository;
 
-    // ─── LISTAR TODAS ───────────────────────────────────────────
-    public List<BicicletaDTO> listarTodas() {
+    // GET todas
+    public List<BicicletaResponseDTO> listarTodas() {
         return bicicletaRepository.findAll()
                 .stream()
-                .map(this::toDTO)
+                .map(this::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    // ─── BUSCAR POR CÓDIGO ───────────────────────────────────────
-    public BicicletaDTO buscarPorCodigo(Integer codigo) {
-        Bicicleta bicicleta = bicicletaRepository.findById(codigo)
+    // GET por código
+    public BicicletaResponseDTO buscarPorCodigo(Integer codigo) {
+        return toResponseDTO(bicicletaRepository.findById(codigo)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "No existe una bicicleta con código " + codigo));
-        return toDTO(bicicleta);
+                        "No existe bicicleta con código " + codigo)));
     }
 
-    // ─── BUSCAR POR MARCA ────────────────────────────────────────
-    public List<BicicletaDTO> buscarPorMarca(String marca) {
+    // GET por marca
+    public List<BicicletaResponseDTO> buscarPorMarca(String marca) {
         return bicicletaRepository.findByMarcaIgnoreCase(marca)
                 .stream()
-                .map(this::toDTO)
+                .map(this::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    // ─── BUSCAR POR TIPO ─────────────────────────────────────────
-    public List<BicicletaDTO> buscarPorTipo(String tipo) {
+    // GET por tipo
+    public List<BicicletaResponseDTO> buscarPorTipo(String tipo) {
         return bicicletaRepository.findByTipoIgnoreCase(tipo)
                 .stream()
-                .map(this::toDTO)
+                .map(this::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    // ─── REGISTRAR ───────────────────────────────────────────────
-    @Transactional
-    public BicicletaDTO registrar(BicicletaDTO dto) {
-        validarBicicleta(dto);
-
-        Bicicleta bicicleta = toEntity(dto);
-        Bicicleta guardada = bicicletaRepository.save(bicicleta);
-
-        // Crear inventario inicial con cantidad 0
-        Inventario inventario = new Inventario();
-        inventario.setBicicleta(guardada);
-        inventario.setCantidad(0);
-        inventario.setStockMinimo(5);
-        inventario.setStockMaximo(50);
-        inventario.setUbicacion("Sin asignar");
-        inventarioRepository.save(inventario);
-
-        return toDTO(guardada);
+    // GET stock bajo
+    public List<BicicletaResponseDTO> listarStockBajo() {
+        return bicicletaRepository.findStockBajo()
+                .stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // ─── ACTUALIZAR ──────────────────────────────────────────────
+    // POST registrar
     @Transactional
-    public BicicletaDTO actualizar(Integer codigo, BicicletaDTO dto) {
-        Bicicleta existente = bicicletaRepository.findById(codigo)
+    public BicicletaResponseDTO registrar(BicicletaRequestDTO dto) {
+        validar(dto);
+        return toResponseDTO(bicicletaRepository.save(toEntity(dto)));
+    }
+
+    // PUT actualizar
+    @Transactional
+    public BicicletaResponseDTO actualizar(Integer codigo, BicicletaRequestDTO dto) {
+        Bicicleta b = bicicletaRepository.findById(codigo)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "No existe una bicicleta con código " + codigo));
-
-        validarBicicleta(dto);
-
-        existente.setMarca(dto.getMarca());
-        existente.setModelo(dto.getModelo());
-        existente.setTipo(dto.getTipo());
-        existente.setPrecioVenta(dto.getPrecioVenta());
-        existente.setDescripcion(dto.getDescripcion());
-
-        return toDTO(bicicletaRepository.save(existente));
+                        "No existe bicicleta con código " + codigo));
+        validar(dto);
+        b.setMarca(dto.getMarca());
+        b.setModelo(dto.getModelo());
+        b.setTipo(dto.getTipo());
+        b.setPrecioCosto(dto.getPrecioCosto());
+        b.setPrecioVenta(dto.getPrecioVenta());
+        b.setDescripcion(dto.getDescripcion());
+        return toResponseDTO(bicicletaRepository.save(b));
     }
 
-    // ─── ELIMINAR ────────────────────────────────────────────────
+    // DELETE
     @Transactional
     public void eliminar(Integer codigo) {
         if (!bicicletaRepository.existsById(codigo)) {
             throw new RecursoNoEncontradoException(
-                    "No existe una bicicleta con código " + codigo);
+                    "No existe bicicleta con código " + codigo);
         }
         bicicletaRepository.deleteById(codigo);
     }
 
-    // ─── ACTUALIZAR INVENTARIO ───────────────────────────────────
+    // PATCH actualizar cantidad
     @Transactional
-    public InventarioDTO actualizarInventario(Integer CodigoBicicleta, Integer nuevaCantidad) {
-        if (nuevaCantidad < 0) {
-            throw new ValidacionException("La cantidad en inventario no puede ser negativa");
+    public BicicletaResponseDTO actualizarCantidad(Integer codigo, Integer cantidad) {
+        if (cantidad < 0) {
+            throw new ValidacionException("La cantidad no puede ser negativa");
         }
-
-        Inventario inventario = inventarioRepository.findByBicicletaCodigo(CodigoBicicleta)
+        Bicicleta b = bicicletaRepository.findById(codigo)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
-                        "No existe inventario para la bicicleta con código " + CodigoBicicleta));
-
-        inventario.setCantidad(nuevaCantidad);
-        Inventario actualizado = inventarioRepository.save(inventario);
-
-        return toInventarioDTO(actualizado);
+                        "No existe bicicleta con código " + codigo));
+        b.setCantidad(cantidad);
+        return toResponseDTO(bicicletaRepository.save(b));
     }
 
-    // ─── VALIDACIONES DE NEGOCIO ─────────────────────────────────
-    private void validarBicicleta(BicicletaDTO dto) {
-        if (dto.getMarca() == null || dto.getMarca().isBlank()) {
+    public List<BicicletaResponseDTO> buscarPorRangoPrecio(
+            BigDecimal min, BigDecimal max) {
+        return bicicletaRepository.findByRangoPrecio(min, max)
+                .stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    // Validaciones
+    private void validar(BicicletaRequestDTO dto) {
+        if (dto.getMarca() == null || dto.getMarca().isBlank())
             throw new ValidacionException("La marca es obligatoria");
-        }
-        if (dto.getModelo() == null || dto.getModelo().isBlank()) {
+        if (dto.getModelo() == null || dto.getModelo().isBlank())
             throw new ValidacionException("El modelo es obligatorio");
-        }
-        if (dto.getPrecioVenta() == null) {
-            throw new ValidacionException("El precio de venta es obligatorio");
-        }
-        if (dto.getPrecioVenta().compareTo(BigDecimal.ZERO) <= 0) {
+        if (dto.getPrecioVenta() == null ||
+                dto.getPrecioVenta().compareTo(BigDecimal.ZERO) <= 0)
             throw new ValidacionException("El precio de venta debe ser mayor a 0");
-        }
+        if (dto.getPrecioCosto() == null ||
+                dto.getPrecioCosto().compareTo(BigDecimal.ZERO) <= 0)
+            throw new ValidacionException("El precio de costo debe ser mayor a 0");
     }
 
-    // ─── CONVERSORES ─────────────────────────────────────────────
-    private BicicletaDTO toDTO(Bicicleta b) {
-        BicicletaDTO dto = new BicicletaDTO();
-        dto.setCodigo(b.getCodigo());
-        dto.setMarca(b.getMarca());
-        dto.setModelo(b.getModelo());
-        dto.setTipo(b.getTipo());
-        dto.setPrecioVenta(b.getPrecioVenta());
-        dto.setDescripcion(b.getDescripcion());
-        dto.setFechaRegistro(b.getFechaRegistro());
-        return dto;
+    // Entity → ResponseDTO
+    private BicicletaResponseDTO toResponseDTO(Bicicleta b) {
+        return new BicicletaResponseDTO(
+                b.getCodigo(),
+                b.getMarca(),
+                b.getModelo(),
+                b.getTipo(),
+                b.getPrecioCosto(),
+                b.getPrecioVenta(),
+                b.getCantidad(),
+                b.getStockMinimo(),
+                b.getStockMaximo(),
+                b.getDescripcion()
+        );
     }
 
-    private Bicicleta toEntity(BicicletaDTO dto) {
+    // RequestDTO → Entity
+    private Bicicleta toEntity(BicicletaRequestDTO dto) {
         Bicicleta b = new Bicicleta();
         b.setMarca(dto.getMarca());
         b.setModelo(dto.getModelo());
         b.setTipo(dto.getTipo());
+        b.setPrecioCosto(dto.getPrecioCosto());
         b.setPrecioVenta(dto.getPrecioVenta());
         b.setDescripcion(dto.getDescripcion());
+        b.setCantidad(0);
+        b.setStockMinimo(5);
+        b.setStockMaximo(50);
         return b;
     }
 
-    private InventarioDTO toInventarioDTO(Inventario i) {
-        InventarioDTO dto = new InventarioDTO();
-        dto.setId(i.getId());
-        dto.setCodigoBicicleta(i.getBicicleta().getCodigo());
-        dto.setMarcaModelo(i.getBicicleta().getMarca() + " " + i.getBicicleta().getModelo());
-        dto.setCantidad(i.getCantidad());
-        dto.setStockMinimo(i.getStockMinimo());
-        dto.setStockMaximo(i.getStockMaximo());
-        dto.setUbicacion(i.getUbicacion());
-        dto.setFechaActualizacion(i.getFechaActualizacion());
-        return dto;
-    }
+
 }

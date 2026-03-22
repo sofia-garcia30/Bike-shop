@@ -24,23 +24,35 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // 400 - Error de trigger MySQL (stock insuficiente, etc.)
     @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleIntegridad(Exception ex) {
-        String mensaje = ex.getMessage();
-        // Extraer el mensaje del trigger MySQL si está disponible
-        if (mensaje != null && mensaje.contains("45000")) {
-            int idx = mensaje.indexOf("45000");
-            String detalle = mensaje.substring(idx).replaceAll(".*MESSAGE_TEXT = '(.+?)'.*", "$1");
-            return buildResponse(HttpStatus.BAD_REQUEST,
-                    detalle.equals(mensaje) ? "Error de integridad en la base de datos" : detalle);
+    public ResponseEntity<Map<String, Object>> handleIntegridad(
+            org.springframework.dao.DataIntegrityViolationException ex) {
+        String mensaje = "Error de integridad en la base de datos";
+        // Buscar el mensaje en toda la cadena de excepciones
+        Throwable t = ex;
+        while (t != null) {
+            if (t.getMessage() != null && t.getMessage().contains("No hay suficiente stock")) {
+                mensaje = "No hay suficiente stock para esta venta";
+                return buildResponse(HttpStatus.BAD_REQUEST, mensaje);
+            }
+            t = t.getCause();
         }
-        return buildResponse(HttpStatus.BAD_REQUEST, "Error de integridad en la base de datos");
+        return buildResponse(HttpStatus.BAD_REQUEST, mensaje);
     }
 
     // 500 - Error inesperado
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
+        // Buscar mensaje del trigger en toda la cadena
+        Throwable t = ex;
+        while (t != null) {
+            if (t.getMessage() != null &&
+                    t.getMessage().contains("No hay suficiente stock")) {
+                return buildResponse(HttpStatus.BAD_REQUEST,
+                        "No hay suficiente stock para esta venta");
+            }
+            t = t.getCause();
+        }
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                 "Error interno del servidor: " + ex.getMessage());
     }
@@ -53,4 +65,6 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now().toString());
         return ResponseEntity.status(status).body(body);
     }
+
+
 }

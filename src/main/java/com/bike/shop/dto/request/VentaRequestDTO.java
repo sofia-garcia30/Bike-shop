@@ -1,11 +1,11 @@
-package com.bike.shop.dto;
+// VentaRequestDTO
+package com.bike.shop.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.util.List;
 
-// Lo que el FRONTEND ENVÍA para crear una venta
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

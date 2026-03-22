@@ -1,21 +1,19 @@
-package com.bike.shop.dto;
+// BicicletaRequestDTO
+package com.bike.shop.dto.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BicicletaDTO {
-    private Integer codigo;
+public class BicicletaRequestDTO {
     private String marca;
     private String modelo;
     private String tipo;
+    private BigDecimal precioCosto;
     private BigDecimal precioVenta;
     private String descripcion;
-    private LocalDateTime fechaRegistro;
 }

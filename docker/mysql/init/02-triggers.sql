@@ -1,59 +1,65 @@
 USE tienda_bicicletas;
 
+-- T1: Validar stock suficiente
 DELIMITER //
-CREATE TRIGGER check_stock BEFORE INSERT ON detalle_venta
-FOR EACH ROW
+CREATE TRIGGER check_stock
+    BEFORE INSERT ON detalle_venta
+    FOR EACH ROW
 BEGIN
     DECLARE stock_actual INT;
-
     SELECT cantidad INTO stock_actual
-    FROM inventario
-    WHERE codigo_bicicleta = NEW.codigo_bicicleta;
-
+    FROM bicicleta
+    WHERE codigo = NEW.codigo_bicicleta;
     IF stock_actual < NEW.cantidad THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Error: No hay suficiente stock para esta venta';
-    END IF;
+END IF;
 END; //
 DELIMITER ;
 
+-- T2: Precio automático
 DELIMITER //
-CREATE TRIGGER precio_automatico BEFORE INSERT ON detalle_venta
-FOR EACH ROW
+CREATE TRIGGER precio_automatico
+    BEFORE INSERT ON detalle_venta
+    FOR EACH ROW
 BEGIN
     DECLARE precio_bici DECIMAL(10,2);
-
     IF NEW.precio_unitario IS NULL OR NEW.precio_unitario = 0 THEN
-        SELECT precio_venta INTO precio_bici
-        FROM bicicleta
-        WHERE codigo = NEW.codigo_bicicleta;
-
-        SET NEW.precio_unitario = precio_bici;
-    END IF;
+    SELECT precio_venta INTO precio_bici
+    FROM bicicleta
+    WHERE codigo = NEW.codigo_bicicleta;
+    SET NEW.precio_unitario = precio_bici;
+END IF;
 END; //
 DELIMITER ;
 
+-- T3: Calcular subtotal
 DELIMITER //
-CREATE TRIGGER calc_subtotal BEFORE INSERT ON detalle_venta
-FOR EACH ROW
+CREATE TRIGGER calc_subtotal
+    BEFORE INSERT ON detalle_venta
+    FOR EACH ROW
 BEGIN
     SET NEW.subtotal = NEW.cantidad * NEW.precio_unitario;
 END; //
 DELIMITER ;
 
+-- T4: Descontar stock de bicicleta al vender
 DELIMITER //
-CREATE TRIGGER update_stock AFTER INSERT ON detalle_venta
-FOR EACH ROW
+CREATE TRIGGER update_stock
+    AFTER INSERT ON detalle_venta
+    FOR EACH ROW
 BEGIN
-    UPDATE inventario
+    UPDATE bicicleta
     SET cantidad = cantidad - NEW.cantidad
-    WHERE codigo_bicicleta = NEW.codigo_bicicleta;
+    WHERE codigo = NEW.codigo_bicicleta;
 END; //
 DELIMITER ;
 
+-- T5: Actualizar total de venta
 DELIMITER //
-CREATE TRIGGER update_venta_total AFTER INSERT ON detalle_venta
-FOR EACH ROW
+CREATE TRIGGER update_venta_total
+    AFTER INSERT ON detalle_venta
+    FOR EACH ROW
 BEGIN
     UPDATE venta
     SET total = (
@@ -65,24 +71,34 @@ BEGIN
 END; //
 DELIMITER ;
 
+-- T6: Sumar stock cuando llega pedido
 DELIMITER //
-CREATE TRIGGER alerta_stock_bajo AFTER UPDATE ON inventario
-FOR EACH ROW
+CREATE TRIGGER actualizar_stock_pedido
+    AFTER UPDATE ON pedido
+    FOR EACH ROW
 BEGIN
-    IF NEW.cantidad <= NEW.stock_minimo AND OLD.cantidad > OLD.stock_minimo THEN
-        INSERT INTO alertas_stock (codigo_bicicleta, mensaje) VALUES
-        (NEW.codigo_bicicleta,
-         CONCAT('⚠️ Stock bajo: Bicicleta ',
-                (SELECT CONCAT(marca, ' ', modelo) FROM bicicleta WHERE codigo = NEW.codigo_bicicleta),
-                ' - Quedan ', NEW.cantidad, ' unidades (mínimo ', NEW.stock_minimo, ')'));
-    END IF;
+    IF NEW.estado = 'recibido' AND OLD.estado = 'pendiente' THEN
+    UPDATE bicicleta b
+        INNER JOIN detalle_pedido dp
+    ON dp.codigo_bicicleta = b.codigo
+        SET b.cantidad = b.cantidad + dp.cantidad
+    WHERE dp.id_pedido = NEW.id;
+END IF;
+END; //
+DELIMITER ;
 
-    IF NEW.cantidad = 0 AND OLD.cantidad > 0 THEN
-        INSERT INTO alertas_stock (codigo_bicicleta, mensaje) VALUES
-        (NEW.codigo_bicicleta,
-         CONCAT('🔴 SIN STOCK: ',
-                (SELECT CONCAT(marca, ' ', modelo) FROM bicicleta WHERE codigo = NEW.codigo_bicicleta),
-                ' - Producto agotado'));
-    END IF;
+-- T7: Devolver stock si venta se cancela
+DELIMITER //
+CREATE TRIGGER devolver_stock_cancelacion
+    AFTER UPDATE ON venta
+    FOR EACH ROW
+BEGIN
+    IF NEW.estado = 'devuelta' AND OLD.estado = 'completada' THEN
+    UPDATE bicicleta b
+        INNER JOIN detalle_venta dv
+    ON dv.codigo_bicicleta = b.codigo
+        SET b.cantidad = b.cantidad + dv.cantidad
+    WHERE dv.id_venta = NEW.id;
+END IF;
 END; //
 DELIMITER ;

@@ -1,15 +1,14 @@
-package com.bike.shop.dto;
+// DetalleVentaRequestDTO
+package com.bike.shop.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-// Un ítem dentro del request de venta
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetalleVentaRequestDTO {
     private Integer codigoBicicleta;
     private Integer cantidad;
-    // precio_unitario NO se envía: el trigger lo toma de bicicleta.precio_venta
 }

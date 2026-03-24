@@ -1,1 +1,21 @@
-<p>navbar works!</p>
+<div class="navbar">
+  <div class="navbar__brand">
+    <span>KINETIC PRECISION</span>
+  </div>
+
+  <nav class="navbar__nav">
+    @for (item of navItems; track item.route) {
+    <a
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      class="navbar__link">
+      {{ item.label }}
+    </a>
+    }
+  </nav>
+
+  <div class="navbar__actions">
+    <button class="navbar__icon">🔔</button>
+    <button class="navbar__icon">👤</button>
+  </div>
+</div>

@@ -1,9 +1,19 @@
-import { Component } from '@angular/core';
+import { CommonModule, CurrencyPipe, NgClass } from '@angular/common';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-product-card',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, CurrencyPipe, NgClass],
   templateUrl: './product-card.html',
-  styleUrl: './product-card.scss',
+  styleUrl: './product-card.scss'
 })
-export class ProductCard {}
+export class ProductCard {
+  @Input() product!: {
+    brand: string;
+    model: string;
+    type: string;
+    price: number;
+    units: number;
+  };
+}

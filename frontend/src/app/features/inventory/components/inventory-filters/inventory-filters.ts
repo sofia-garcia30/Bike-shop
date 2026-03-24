@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-inventory-filters',
+  standalone: true,
   imports: [],
   templateUrl: './inventory-filters.html',
-  styleUrl: './inventory-filters.scss',
+  styleUrl: './inventory-filters.scss'
 })
-export class InventoryFilters {}
+export class InventoryFilters {
+}

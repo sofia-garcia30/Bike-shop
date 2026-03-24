@@ -1,1 +1,21 @@
-<p>inventory-page works!</p>
+<section class="inventory-page">
+  <div class="inventory-page__header">
+    <div>
+      <p class="inventory-page__eyebrow">Kinetic Precision</p>
+      <h1>Available Stock</h1>
+      <p class="inventory-page__subtitle">Found 24 precision engineered machines</p>
+    </div>
+
+    <button class="inventory-page__sort">Sort: Newest</button>
+  </div>
+
+  <div class="inventory-page__body">
+    <aside class="inventory-page__sidebar">
+      <app-inventory-filters></app-inventory-filters>
+    </aside>
+
+    <section class="inventory-page__content">
+      <app-inventory-grid></app-inventory-grid>
+    </section>
+  </div>
+</section>

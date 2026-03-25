@@ -1,28 +1,25 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: transparent;
 }
 
 .layout {
   min-height: 100vh;
-  background: transparent;
 }
 
 .layout__sidebar {
   position: fixed;
   top: 72px;
   left: 0;
-  width: 220px;
+  width: 240px;
   height: calc(100vh - 72px);
-  background: linear-gradient(180deg, #23272b 0%, #1a1d1f 100%);
-  border-right: 1px solid var(--kp-border-soft);
-  z-index: 20;
+  background: #20252a;
+  border-right: 1px solid var(--border);
 }
 
 .layout__content {
+  margin-left: 240px;
   min-height: 100vh;
-  margin-left: 220px;
   display: flex;
   flex-direction: column;
 }
@@ -30,7 +27,7 @@
 .layout__navbar {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: 20;
 }
 
 .layout__page {

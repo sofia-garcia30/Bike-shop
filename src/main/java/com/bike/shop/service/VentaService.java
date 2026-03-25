@@ -13,13 +13,14 @@ import com.bike.shop.repository.BicicletaRepository;
 import com.bike.shop.repository.ClienteRepository;
 import com.bike.shop.repository.DetalleVentaRepository;
 import com.bike.shop.repository.VentaRepository;
+import com.bike.shop.entity.Bicicleta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -71,22 +72,22 @@ public class VentaService {
         venta.setFecha(LocalDateTime.now());
         venta.setFormaPago(dto.getFormaPago());
         venta.setEstado("completada");
-        venta.setTotal(0.0);
+        venta.setTotal(BigDecimal.ZERO);
         Venta guardada = ventaRepository.save(venta);
 
         // Crear detalles — los triggers manejan stock y total
         dto.getDetalles().forEach(d -> {
-            bicicletaRepository.findById(d.getCodigoBicicleta())
+            // ✅ Una sola llamada a findById
+            Bicicleta bicicleta = bicicletaRepository.findById(d.getCodigoBicicleta())
                     .orElseThrow(() -> new RecursoNoEncontradoException(
                             "No existe bicicleta con código " + d.getCodigoBicicleta()));
 
             DetalleVenta detalle = new DetalleVenta();
             detalle.setVenta(guardada);
-            detalle.setBicicleta(bicicletaRepository.findById(
-                    d.getCodigoBicicleta()).get());
+            detalle.setBicicleta(bicicleta);
             detalle.setCantidad(d.getCantidad());
-            detalle.setPrecioUnitario(java.math.BigDecimal.ZERO);
-            detalle.setSubtotal(java.math.BigDecimal.ZERO);
+            detalle.setPrecioUnitario(BigDecimal.ZERO);
+            detalle.setSubtotal(BigDecimal.ZERO);
             detalleVentaRepository.save(detalle);
         });
 
@@ -127,7 +128,7 @@ public class VentaService {
                 v.getCliente().getDocumento(),
                 v.getCliente().getNombre(),
                 v.getFecha(),
-                java.math.BigDecimal.valueOf(v.getTotal()),
+                v.getTotal(),
                 v.getFormaPago(),
                 v.getEstado(),
                 detalles

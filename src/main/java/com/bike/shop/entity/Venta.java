@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +30,7 @@ public class Venta {
     private LocalDateTime fecha;
 
     @Column(nullable = false)
-    private Double total;
+    private BigDecimal total;
 
     @Column(name = "forma_pago", length = 50)
     private String formaPago;

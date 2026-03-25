@@ -11,5 +11,12 @@
     <button class="btn-secondary inventory-page__sort">Ordenar: Más recientes</button>
   </div>
 
+  <div class="inventory-page__filters panel">
+    <button class="btn-secondary" (click)="filtrarTodas()">Todos</button>
+    <button class="btn-secondary" (click)="filtrarMarcaGW()">Marca: GW</button>
+    <button class="btn-secondary" (click)="filtrarTipoMontana()">Tipo: Montaña</button>
+    <button class="btn-secondary" (click)="filtrarStockBajo()">Stock bajo</button>
+  </div>
+
   <app-inventory-grid></app-inventory-grid>
 </section>

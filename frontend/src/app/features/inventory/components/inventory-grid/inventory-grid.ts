@@ -1,5 +1,4 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
 import { ProductCard } from '../product-card/product-card';
 
 import { BicicletaService } from '../../../../core/services/bicicleta';
@@ -9,7 +8,7 @@ import { ProductoInventario } from '../../../../core/models/producto-inventario.
 @Component({
   selector: 'app-inventory-grid',
   standalone: true,
-  imports: [ProductCard, CurrencyPipe],
+  imports: [ProductCard],
   templateUrl: './inventory-grid.html',
   styleUrl: './inventory-grid.scss'
 })
@@ -22,40 +21,72 @@ export class InventoryGrid implements OnInit {
   error = '';
 
   ngOnInit(): void {
-    console.log('ENTRO A INVENTORY GRID');
+    this.cargarTodas();
+  }
+
+  cargarTodas(): void {
+    this.loading = true;
+    this.error = '';
 
     this.bicicletaService.getAll().subscribe({
-      next: (data: Bicicleta[]) => {
-        console.log('Bicicletas backend:', data);
-
-        const mappedProducts: ProductoInventario[] = data.map((item) => ({
-          codigo: item.codigo,
-          brand: item.marca,
-          model: item.modelo,
-          type: item.tipo || 'Sin categoría',
-          price: Number(item.precioVenta),
-          stock: Number(item.cantidad),
-          stockMinimo: Number(item.stockMinimo),
-          stockMaximo: Number(item.stockMaximo),
-          description: item.descripcion || '',
-          image: ''
-        }));
-
-        this.products = [...mappedProducts];
-        this.loading = false;
-        this.error = '';
-
-        console.log('Productos mapeados:', this.products);
-        console.log('Total products length:', this.products.length);
-
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error al cargar inventario:', err);
-        this.error = `No se pudo cargar el inventario. Estado: ${err.status || 'sin estado'}`;
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
+      next: (data) => this.asignarProductos(data),
+      error: (err) => this.manejarError(err)
     });
+  }
+
+  cargarPorMarca(marca: string): void {
+    this.loading = true;
+    this.error = '';
+
+    this.bicicletaService.buscarPorMarca(marca).subscribe({
+      next: (data) => this.asignarProductos(data),
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  cargarPorTipo(tipo: string): void {
+    this.loading = true;
+    this.error = '';
+
+    this.bicicletaService.buscarPorTipo(tipo).subscribe({
+      next: (data) => this.asignarProductos(data),
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  cargarStockBajo(): void {
+    this.loading = true;
+    this.error = '';
+
+    this.bicicletaService.getStockBajo().subscribe({
+      next: (data) => this.asignarProductos(data),
+      error: (err) => this.manejarError(err)
+    });
+  }
+
+  private asignarProductos(data: Bicicleta[]): void {
+    this.products = data.map((item) => ({
+      codigo: item.codigo,
+      brand: item.marca,
+      model: item.modelo,
+      type: item.tipo || 'Sin categoría',
+      price: Number(item.precioVenta),
+      stock: Number(item.cantidad),
+      stockMinimo: Number(item.stockMinimo),
+      stockMaximo: Number(item.stockMaximo),
+      description: item.descripcion || '',
+      image: ''
+    }));
+
+    this.loading = false;
+    this.error = '';
+    this.cdr.detectChanges();
+  }
+
+  private manejarError(err: unknown): void {
+    console.error('Error al cargar inventario:', err);
+    this.error = 'No se pudo cargar el inventario desde el backend.';
+    this.loading = false;
+    this.cdr.detectChanges();
   }
 }

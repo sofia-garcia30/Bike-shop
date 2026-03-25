@@ -15,4 +15,20 @@ export class BicicletaService {
   getAll(): Observable<Bicicleta[]> {
     return this.http.get<Bicicleta[]>(this.apiUrl);
   }
+
+  getByCodigo(codigo: number): Observable<Bicicleta> {
+    return this.http.get<Bicicleta>(`${this.apiUrl}/${codigo}`);
+  }
+
+  buscarPorMarca(marca: string): Observable<Bicicleta[]> {
+    return this.http.get<Bicicleta[]>(`${this.apiUrl}/buscar?marca=${encodeURIComponent(marca)}`);
+  }
+
+  buscarPorTipo(tipo: string): Observable<Bicicleta[]> {
+    return this.http.get<Bicicleta[]>(`${this.apiUrl}/buscar?tipo=${encodeURIComponent(tipo)}`);
+  }
+
+  getStockBajo(): Observable<Bicicleta[]> {
+    return this.http.get<Bicicleta[]>(`${this.apiUrl}/stock-bajo`);
+  }
 }

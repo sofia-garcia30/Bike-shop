@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { InventoryGrid } from '../../components/inventory-grid/inventory-grid';
 
 @Component({
@@ -9,4 +9,21 @@ import { InventoryGrid } from '../../components/inventory-grid/inventory-grid';
   styleUrl: './inventory-page.scss'
 })
 export class InventoryPage {
+  @ViewChild(InventoryGrid) inventoryGrid!: InventoryGrid;
+
+  filtrarTodas(): void {
+    this.inventoryGrid.cargarTodas();
+  }
+
+  filtrarMarcaGW(): void {
+    this.inventoryGrid.cargarPorMarca('GW');
+  }
+
+  filtrarTipoMontana(): void {
+    this.inventoryGrid.cargarPorTipo('Montaña');
+  }
+
+  filtrarStockBajo(): void {
+    this.inventoryGrid.cargarStockBajo();
+  }
 }

@@ -148,6 +148,195 @@
   transform: translateY(-1px);
   box-shadow: 0 14px 28px rgba(255, 95, 0, 0.25);
 }
+// Botón nueva bicicleta
+.inventory-page__new-btn {
+  border: none;
+  border-radius: var(--kp-radius-md, 12px);
+  background: linear-gradient(135deg, #ff8e57, #ff5f00);
+  color: #1f140d;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.inventory-page__new-btn:hover {
+  transform: translateY(-1px);
+}
+
+// Espaciado entre botones del header
+.inventory-page__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+// Modal formulario
+.inventory-page__modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  width: 480px;
+  max-width: 90vw;
+  background: #1a1d1f;
+  border: 1px solid #343a40;
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+// Grupos del formulario
+.inventory-page__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.inventory-page__form-group label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ff5f00;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.inventory-page__form-group input,
+.inventory-page__form-group select {
+  background: #202428;
+  border: 1px solid #343a40;
+  border-radius: 10px;
+  color: #f5f7fa;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.inventory-page__form-group input:focus,
+.inventory-page__form-group select:focus {
+  border-color: #ff5f00;
+}
+
+// Botones del drawer de filtros
+.inventory-page__filter-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid #343a40;
+  border-radius: 8px;
+  color: #d2d6dc;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.inventory-page__filter-btn:hover {
+  background: rgba(255, 95, 0, 0.1);
+  border-color: #ff5f00;
+  color: #ff5f00;
+}
+
+.inventory-page__filter-btn--active {
+  background: rgba(255, 95, 0, 0.15);
+  border-color: #ff5f00;
+  color: #ff5f00;
+  font-weight: 700;
+}
+
+// Botones de acción del drawer
+.inventory-page__clear-btn {
+  border: 1px solid #343a40;
+  background: transparent;
+  color: #d2d6dc;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inventory-page__apply-btn {
+  border: none;
+  background: linear-gradient(135deg, #ff8e57, #ff5f00);
+  color: #1f140d;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex: 1;
+}
+
+.inventory-page__drawer-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+// Overlay
+.inventory-page__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 50;
+  backdrop-filter: blur(2px);
+}
+
+// Drawer de filtros
+.inventory-page__drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100vh;
+  background: #1a1d1f;
+  border-left: 1px solid #343a40;
+  padding: 1.5rem;
+  z-index: 100;
+  overflow-y: auto;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.inventory-page__drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.inventory-page__close-btn {
+  background: transparent;
+  border: none;
+  color: #d2d6dc;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.inventory-page__filter-group {
+  margin-bottom: 1.5rem;
+}
+
+.inventory-page__filter-group h4 {
+  color: #ff5f00;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
 
 /* CONTENIDO */
 
@@ -172,4 +361,6 @@
   .inventory-page__title {
     font-size: 2.3rem;
   }
+
+
 }

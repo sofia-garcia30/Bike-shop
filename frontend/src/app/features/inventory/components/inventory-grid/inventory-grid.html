@@ -1,0 +1,5 @@
+<div class="inventory-grid">
+  @for (product of products; track product.model) {
+  <app-product-card [product]="product"></app-product-card>
+  }
+</div>

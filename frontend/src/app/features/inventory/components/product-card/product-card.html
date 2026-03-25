@@ -1,0 +1,33 @@
+<article class="product-card">
+  <div class="product-card__image"></div>
+
+  <div class="product-card__meta">
+    <span class="product-card__brand">{{ product.brand }}</span>
+    <span class="product-card__type">{{ product.type }}</span>
+  </div>
+
+  <h3>{{ product.model }}</h3>
+
+  <div class="product-card__stock-row">
+    <span>Availability</span>
+    <strong [ngClass]="{ 'low-stock': product.units <= 2 }">
+      {{ product.units < 10 ? '0' + product.units : product.units }} Units
+    </strong>
+  </div>
+
+  <div class="product-card__bar">
+    <div
+      class="product-card__fill"
+      [style.width.%]="product.units * 8">
+    </div>
+  </div>
+
+  <div class="product-card__footer">
+    <div class="product-card__price">
+      {{ product.price | currency:'USD':'symbol':'1.0-0' }}
+      <small>USD</small>
+    </div>
+
+    <button class="product-card__action">🛒</button>
+  </div>
+</article>

@@ -1,1 +1,90 @@
-<p>dashboard-page works!</p>
+<section class="dashboard-page">
+  <div class="dashboard-page__header">
+    <div>
+      <p class="dashboard-page__eyebrow">Kinetic Precision</p>
+      <h1 class="dashboard-page__title">DASHBOARD</h1>
+      <p class="dashboard-page__subtitle">
+        Visualiza el estado general del negocio, el inventario y la operación comercial en un solo lugar.
+      </p>
+    </div>
+
+    <button class="dashboard-page__action-btn">
+      EXPORTAR REPORTE
+    </button>
+  </div>
+
+  <div class="dashboard-page__metrics">
+    @for (metric of metrics; track metric.label) {
+    <article class="dashboard-page__metric panel">
+      <p>{{ metric.label }}</p>
+      <h3>{{ metric.value }}</h3>
+      <span>{{ metric.note }}</span>
+    </article>
+    }
+  </div>
+
+  <div class="dashboard-page__layout">
+    <section class="dashboard-page__summary panel">
+      <div class="dashboard-page__block-header">
+        <h3>Resumen operativo</h3>
+        <p>Panorama general del sistema</p>
+      </div>
+
+      <div class="dashboard-page__summary-grid">
+        <div class="dashboard-page__summary-card">
+          <span>Inventario disponible</span>
+          <strong>97%</strong>
+        </div>
+
+        <div class="dashboard-page__summary-card">
+          <span>Pedidos activos</span>
+          <strong>08</strong>
+        </div>
+
+        <div class="dashboard-page__summary-card">
+          <span>Ventas completadas</span>
+          <strong>18</strong>
+        </div>
+
+        <div class="dashboard-page__summary-card">
+          <span>Clientes del día</span>
+          <strong>12</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-page__alerts panel">
+      <div class="dashboard-page__block-header">
+        <h3>Alertas</h3>
+        <p>Eventos que requieren atención</p>
+      </div>
+
+      <div class="dashboard-page__alerts-list">
+        @for (alert of alerts; track alert) {
+        <div class="dashboard-page__alert-item">
+          {{ alert }}
+        </div>
+        }
+      </div>
+    </section>
+  </div>
+
+  <section class="dashboard-page__activity panel">
+    <div class="dashboard-page__block-header">
+      <h3>Actividad reciente</h3>
+      <p>Últimos movimientos registrados en el sistema</p>
+    </div>
+
+    <div class="dashboard-page__activity-list">
+      @for (item of activity; track item.title + item.date) {
+      <div class="dashboard-page__activity-item">
+        <div>
+          <strong>{{ item.title }}</strong>
+          <p>{{ item.detail }}</p>
+        </div>
+        <span>{{ item.date }}</span>
+      </div>
+      }
+    </div>
+  </section>
+</section>

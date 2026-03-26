@@ -1,14 +1,3 @@
-import { Component } from '@angular/core';
-import { SupplierCard } from '../../components/supplier-card/supplier-card';
-import { ProcurementForm } from '../../components/procurement-form/procurement-form';
-import { OrdersTable } from '../../components/orders-table/orders-table';
-
-@Component({
-selector: 'app-orders-page',
-standalone: true,
-imports: [SupplierCard, ProcurementForm, OrdersTable],
-templateUrl: './orders-page.html',
-styleUrl: './orders-page.scss'
-})
-export class OrdersPage {
-}
+<section class="orders-page">
+  <app-supplier-card></app-supplier-card>
+</section>

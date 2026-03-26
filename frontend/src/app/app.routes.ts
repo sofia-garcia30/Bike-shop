@@ -1,11 +1,44 @@
 import { Routes } from '@angular/router';
-import { SalesPage } from './features/sales/pages/sales-page/sales-page';
+import { MainLayout } from './layout/main-layout/main-layout';
 
 export const routes: Routes = [
-  { path: 'inventory', loadComponent: () => import('./features/inventory/pages/inventory-page/inventory-page').then(m => m.InventoryPage) },
-
-  // ✅ AGREGA ESTO
-  { path: 'sales', component: SalesPage },
-
-  { path: '', redirectTo: 'inventory', pathMatch: 'full' }
+  {
+    path: '',
+    component: MainLayout,
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard-page/dashboard-page')
+            .then(m => m.DashboardPage)
+      },
+      {
+        path: 'inventory',
+        loadComponent: () =>
+          import('./features/inventory/pages/inventory-page/inventory-page')
+            .then(m => m.InventoryPage)
+      },
+      {
+        path: 'sales',
+        loadComponent: () =>
+          import('./features/sales/pages/sales-page/sales-page')
+            .then(m => m.SalesPage)
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/orders/pages/orders-page/orders-page')
+            .then(m => m.OrdersPage)
+      },
+      {
+        path: '',
+        redirectTo: 'inventory',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: '**',
+    redirectTo: 'inventory'
+  }
 ];

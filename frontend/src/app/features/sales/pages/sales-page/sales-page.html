@@ -1,1 +1,27 @@
-<p>sales-page works!</p>
+<section class="sales-page">
+  <div class="sales-page__header">
+    <div>
+      <p class="sales-page__eyebrow">Kinetic Precision</p>
+      <h1 class="sales-page__title">VENTAS</h1>
+      <p class="sales-page__subtitle">
+        Registra ventas, consulta métricas y monitorea la actividad comercial en tiempo real.
+      </p>
+    </div>
+
+    <button class="sales-page__action-btn">
+      NUEVA VENTA
+    </button>
+  </div>
+
+  <app-sales-summary></app-sales-summary>
+
+  <div class="sales-page__layout">
+    <div class="sales-page__form">
+      <app-sales-form></app-sales-form>
+    </div>
+
+    <div class="sales-page__activity">
+      <app-recent-activity-table></app-recent-activity-table>
+    </div>
+  </div>
+</section>

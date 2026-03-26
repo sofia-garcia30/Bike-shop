@@ -1,5 +1,19 @@
+@if (loading) {
+<div class="inventory-grid__state panel">
+  Cargando inventario...
+</div>
+} @else if (error) {
+<div class="inventory-grid__state inventory-grid__state--error panel">
+  {{ error }}
+</div>
+} @else if (products.length === 0) {
+<div class="inventory-grid__state panel">
+  No hay bicicletas registradas.
+</div>
+} @else {
 <div class="inventory-grid">
-  @for (product of products; track product.model) {
+  @for (product of products; track product.codigo) {
   <app-product-card [product]="product"></app-product-card>
   }
 </div>
+}

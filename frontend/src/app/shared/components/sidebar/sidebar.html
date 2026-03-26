@@ -1,16 +1,23 @@
 <div class="sidebar">
-  <div class="sidebar__header">
-    <h3>Filters</h3>
-    <p>Refine inventory</p>
+  <div class="sidebar__top">
+    <a routerLink="/dashboard" routerLinkActive="active" class="sidebar__item">
+      Dashboard
+    </a>
+
+    <a routerLink="/inventory" routerLinkActive="active" class="sidebar__item">
+      Inventario
+    </a>
+
+    <a routerLink="/sales" routerLinkActive="active" class="sidebar__item">
+      Ventas
+    </a>
+
+    <a routerLink="/orders" routerLinkActive="active" class="sidebar__item">
+      Pedidos
+    </a>
   </div>
 
-  <nav class="sidebar__nav">
-    <button class="sidebar__item sidebar__item--active">Brand</button>
-    <button class="sidebar__item">Type</button>
-    <button class="sidebar__item">Stock Status</button>
-  </nav>
-
-  <div class="sidebar__footer">
-    <button class="kp-button-primary sidebar__button">Apply Filters</button>
+  <div class="sidebar__bottom">
+    <span>Sistema operativo</span>
   </div>
 </div>

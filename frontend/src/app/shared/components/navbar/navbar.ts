@@ -11,8 +11,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 export class Navbar {
   navItems = [
     { label: 'Dashboard', route: '/dashboard' },
-    { label: 'Inventory', route: '/inventory' },
-    { label: 'Sales', route: '/sales' },
-    { label: 'Orders', route: '/orders' }
+    { label: 'Inventario', route: '/inventory' },
+    { label: 'Ventas', route: '/sales' },
+    { label: 'Pedidos', route: '/orders' }
   ];
 }

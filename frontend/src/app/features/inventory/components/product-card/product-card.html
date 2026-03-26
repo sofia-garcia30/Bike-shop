@@ -1,5 +1,7 @@
-<article class="product-card">
-  <div class="product-card__image"></div>
+<article class="product-card panel">
+  <div class="product-card__image">
+    <div class="product-card__placeholder">Bicicleta</div>
+  </div>
 
   <div class="product-card__meta">
     <span class="product-card__brand">{{ product.brand }}</span>
@@ -9,23 +11,20 @@
   <h3>{{ product.model }}</h3>
 
   <div class="product-card__stock-row">
-    <span>Availability</span>
-    <strong [ngClass]="{ 'low-stock': product.units <= 2 }">
-      {{ product.units < 10 ? '0' + product.units : product.units }} Units
+    <span>Disponibilidad</span>
+    <strong [ngClass]="{ 'is-low': isLowStock }">
+      {{ product.stock < 10 ? '0' + product.stock : product.stock }} unidades
     </strong>
   </div>
 
   <div class="product-card__bar">
-    <div
-      class="product-card__fill"
-      [style.width.%]="product.units * 8">
-    </div>
+    <div class="product-card__fill" [style.width.%]="stockProgress"></div>
   </div>
 
   <div class="product-card__footer">
     <div class="product-card__price">
-      {{ product.price | currency:'USD':'symbol':'1.0-0' }}
-      <small>USD</small>
+      {{ product.price | currency:'COP':'symbol':'1.0-0':'es-CO' }}
+      <small>COP</small>
     </div>
 
     <button class="product-card__action">🛒</button>

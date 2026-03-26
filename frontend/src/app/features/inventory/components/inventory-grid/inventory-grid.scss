@@ -1,5 +1,15 @@
 .inventory-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
   gap: 1.5rem;
+}
+
+.inventory-grid__state {
+  padding: 2rem;
+  color: var(--text-soft);
+  font-size: 1rem;
+}
+
+.inventory-grid__state--error {
+  color: var(--danger);
 }

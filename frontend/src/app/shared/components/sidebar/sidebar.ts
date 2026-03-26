@@ -9,7 +9,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './sidebar.scss'
 })
 export class Sidebar {
-  menuItems = [
+  items = [
     { label: 'Dashboard', route: '/dashboard' },
     { label: 'Inventario', route: '/inventory' },
     { label: 'Ventas', route: '/sales' },

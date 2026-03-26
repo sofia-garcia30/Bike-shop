@@ -1,21 +1,43 @@
-<section class="inventory-page">
-  <div class="inventory-page__header">
-    <div>
-      <p class="inventory-page__eyebrow">Kinetic Precision</p>
-      <h1>Available Stock</h1>
-      <p class="inventory-page__subtitle">Found 24 precision engineered machines</p>
-    </div>
+<div class="inventory-page__filter-group">
+  <h4>Marca</h4>
 
-    <button class="inventory-page__sort">Sort: Newest</button>
-  </div>
+  <button
+    class="inventory-page__filter-btn"
+    [class.inventory-page__filter-btn--active]="marcaSeleccionada === null"
+    (click)="seleccionarMarca(null)">
+    Todas
+  </button>
 
-  <div class="inventory-page__body">
-    <aside class="inventory-page__sidebar">
-      <app-inventory-filters></app-inventory-filters>
-    </aside>
+  <button
+    class="inventory-page__filter-btn"
+    [class.inventory-page__filter-btn--active]="marcaSeleccionada === 'GW'"
+    (click)="seleccionarMarca('GW')">
+    GW
+  </button>
+</div>
 
-    <section class="inventory-page__content">
-      <app-inventory-grid></app-inventory-grid>
-    </section>
-  </div>
-</section>
+<div class="inventory-page__filter-group">
+  <h4>Tipo</h4>
+
+  <button
+    class="inventory-page__filter-btn"
+    [class.inventory-page__filter-btn--active]="tipoSeleccionado === 'Montaña'"
+    (click)="seleccionarTipo('Montaña')">
+    Montaña
+  </button>
+</div>
+
+<div class="inventory-page__filter-group">
+  <h4>Estado de stock</h4>
+
+  <button
+    class="inventory-page__filter-btn"
+    [class.inventory-page__filter-btn--active]="soloStockBajo"
+    (click)="toggleStockBajo()">
+    Stock bajo
+  </button>
+</div>
+
+<button class="inventory-page__apply-btn" (click)="aplicarFiltros()">
+  APLICAR FILTROS
+</button>

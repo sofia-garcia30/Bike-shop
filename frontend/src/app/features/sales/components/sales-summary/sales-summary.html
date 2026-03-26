@@ -1,1 +1,9 @@
-<p>sales-summary works!</p>
+<div class="sales-summary">
+  @for (metric of metrics; track metric.label) {
+  <article class="sales-summary__card panel">
+    <p class="sales-summary__label">{{ metric.label }}</p>
+    <h3>{{ metric.value }}</h3>
+    <span>{{ metric.note }}</span>
+  </article>
+  }
+</div>

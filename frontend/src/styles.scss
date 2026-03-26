@@ -1,39 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
-  --kp-bg: #121416;
-  --kp-bg-soft: #1a1d1f;
-  --kp-panel: #202428;
-  --kp-panel-2: #2a2f35;
-  --kp-panel-3: #31363c;
-  --kp-border: #343a40;
-  --kp-border-soft: #2d3238;
+  --bg: #15181b;
+  --bg-soft: #1c2024;
+  --panel: #23282d;
+  --panel-2: #2b3137;
+  --border: #343b42;
 
-  --kp-primary: #ff7a3d;
-  --kp-primary-2: #ff8e57;
-  --kp-primary-strong: #ff5f00;
-  --kp-primary-glow: rgba(255, 95, 0, 0.18);
+  --text: #f5f7fa;
+  --text-soft: #cdd3da;
+  --text-muted: #9aa3ad;
 
-  --kp-text: #f5f7fa;
-  --kp-text-soft: #d2d6dc;
-  --kp-text-muted: #9aa3ad;
+  --primary: #ff7a3d;
+  --primary-strong: #ff5f00;
+  --danger: #ff6b6b;
 
-  --kp-success: #ff9e66;
-  --kp-warning: #faac21;
-  --kp-danger: #ff6f6c;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
 
-  --kp-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
-  --kp-shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.18);
+  --shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
 
-  --kp-radius-sm: 8px;
-  --kp-radius-md: 12px;
-  --kp-radius-lg: 18px;
-  --kp-radius-xl: 24px;
-
-  --font-headline: 'Space Grotesk', sans-serif;
+  --font-title: 'Space Grotesk', sans-serif;
   --font-body: 'Manrope', sans-serif;
-  --font-label: 'Inter', sans-serif;
 }
 
 * {
@@ -44,10 +34,8 @@ html,
 body {
   margin: 0;
   min-height: 100%;
-  background:
-    radial-gradient(circle at top center, rgba(255, 95, 0, 0.08), transparent 20%),
-    linear-gradient(180deg, #111417 0%, #121416 100%);
-  color: var(--kp-text);
+  background: linear-gradient(180deg, #111315 0%, #15181b 100%);
+  color: var(--text);
   font-family: var(--font-body);
 }
 
@@ -57,104 +45,48 @@ body {
 
 button,
 input,
-select,
-textarea {
+select {
   font: inherit;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.kp-page-title {
+.page-title {
   margin: 0;
-  font-family: var(--font-headline);
-  font-size: 3rem;
+  font-family: var(--font-title);
+  font-size: 2.6rem;
   font-weight: 800;
-  line-height: 0.95;
+  line-height: 1;
   letter-spacing: -0.04em;
   text-transform: uppercase;
-  color: var(--kp-text);
 }
 
-.kp-page-subtitle {
-  margin: 0.75rem 0 0;
-  max-width: 56rem;
-  color: var(--kp-text-muted);
-  font-size: 1rem;
+.page-subtitle {
+  margin: 0.65rem 0 0;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
-.kp-eyebrow {
-  margin: 0 0 0.65rem;
-  color: var(--kp-primary-strong);
-  font-family: var(--font-label);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
 }
 
-.kp-surface {
-  background: linear-gradient(180deg, rgba(49, 54, 60, 0.42), rgba(28, 32, 36, 0.9));
-  border: 1px solid var(--kp-border-soft);
-  box-shadow: var(--kp-shadow-soft);
-  border-radius: var(--kp-radius-lg);
-}
-
-.kp-button-primary {
+.btn-primary {
   border: none;
-  border-radius: var(--kp-radius-md);
-  background: linear-gradient(135deg, var(--kp-primary-2), var(--kp-primary-strong));
-  color: #1f140d;
-  font-family: var(--font-headline);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color: #1d120c;
+  font-family: var(--font-title);
   font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 0 24px rgba(255, 122, 61, 0.22);
-}
-
-.kp-button-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 28px rgba(255, 122, 61, 0.32);
-}
-
-.kp-button-secondary {
-  border: 1px solid var(--kp-border);
-  border-radius: var(--kp-radius-md);
-  background: rgba(49, 54, 60, 0.55);
-  color: var(--kp-text);
-  font-family: var(--font-headline);
-  font-weight: 700;
   cursor: pointer;
 }
 
-.kp-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.55rem;
-  border-radius: 999px;
-  font-family: var(--font-label);
-  font-size: 0.66rem;
+.btn-secondary {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel-2);
+  color: var(--text);
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.kp-badge--warning {
-  background: rgba(250, 172, 33, 0.14);
-  color: var(--kp-warning);
-}
-
-.kp-badge--danger {
-  background: rgba(255, 111, 108, 0.14);
-  color: var(--kp-danger);
-}
-
-.kp-badge--primary {
-  background: rgba(255, 122, 61, 0.16);
-  color: var(--kp-primary-2);
+  cursor: pointer;
 }

@@ -1,1 +1,37 @@
-<p>recent-activity-table works!</p>
+<section class="recent-activity panel">
+  <div class="recent-activity__header">
+    <h3>Actividad reciente</h3>
+    <p>Resumen de las últimas ventas registradas</p>
+  </div>
+
+  <div class="recent-activity__table-wrapper">
+    <table class="recent-activity__table">
+      <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Producto</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Estado</th>
+      </tr>
+      </thead>
+      <tbody>
+      @for (activity of activities; track activity.cliente + activity.fecha) {
+      <tr>
+        <td>{{ activity.cliente }}</td>
+        <td>{{ activity.producto }}</td>
+        <td>{{ activity.fecha }}</td>
+        <td>{{ activity.total }}</td>
+        <td>
+              <span
+                class="recent-activity__badge"
+                [class.recent-activity__badge--pending]="activity.estado === 'Pendiente'">
+                {{ activity.estado }}
+              </span>
+        </td>
+      </tr>
+      }
+      </tbody>
+    </table>
+  </div>
+</section>

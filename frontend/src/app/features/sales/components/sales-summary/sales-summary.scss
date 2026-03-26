@@ -1,0 +1,39 @@
+.sales-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.sales-summary__card {
+  padding: 1.25rem;
+}
+
+.sales-summary__label {
+  margin: 0 0 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sales-summary__card h3 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.sales-summary__card span {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+@media (max-width: 992px) {
+  .sales-summary {
+    grid-template-columns: 1fr;
+  }
+}

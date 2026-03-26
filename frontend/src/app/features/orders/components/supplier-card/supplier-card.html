@@ -1,1 +1,9 @@
-<p>supplier-card works!</p>
+<div class="supplier-card">
+  @for (supplier of suppliers; track supplier.name) {
+  <article class="supplier-card__item panel">
+    <span class="supplier-card__status">{{ supplier.status }}</span>
+    <h3>{{ supplier.name }}</h3>
+    <p>Tiempo estimado: {{ supplier.lead }}</p>
+  </article>
+  }
+</div>

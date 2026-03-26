@@ -1,43 +1,93 @@
-<div class="inventory-page__filter-group">
-  <h4>Marca</h4>
+<section class="inventory-page">
+  <div class="inventory-page__header">
+    <div>
+      <h1 class="inventory-page__title">STOCK DISPONIBLE</h1>
+      <p class="inventory-page__subtitle">
+        Se encontraron {{ inventoryGrid?.products?.length || 0 }} bicicletas registradas
+      </p>
+    </div>
 
-  <button
-    class="inventory-page__filter-btn"
-    [class.inventory-page__filter-btn--active]="marcaSeleccionada === null"
-    (click)="seleccionarMarca(null)">
-    Todas
-  </button>
+    <div class="inventory-page__actions">
+      <button class="inventory-page__filter-toggle" (click)="toggleFiltros()">
+        FILTROS
+      </button>
 
-  <button
-    class="inventory-page__filter-btn"
-    [class.inventory-page__filter-btn--active]="marcaSeleccionada === 'GW'"
-    (click)="seleccionarMarca('GW')">
-    GW
-  </button>
-</div>
+      <button class="inventory-page__sort-btn">
+        ORDENAR: MÁS RECIENTES
+      </button>
+    </div>
+  </div>
 
-<div class="inventory-page__filter-group">
-  <h4>Tipo</h4>
+  <div class="inventory-page__content">
+    <app-inventory-grid></app-inventory-grid>
+  </div>
 
-  <button
-    class="inventory-page__filter-btn"
-    [class.inventory-page__filter-btn--active]="tipoSeleccionado === 'Montaña'"
-    (click)="seleccionarTipo('Montaña')">
-    Montaña
-  </button>
-</div>
+  @if (mostrarFiltros) {
+  <div class="inventory-page__overlay" (click)="cerrarFiltros()"></div>
 
-<div class="inventory-page__filter-group">
-  <h4>Estado de stock</h4>
+  <aside class="inventory-page__drawer panel">
+    <div class="inventory-page__drawer-header">
+      <div>
+        <h3>FILTROS</h3>
+        <p>Refina el inventario</p>
+      </div>
 
-  <button
-    class="inventory-page__filter-btn"
-    [class.inventory-page__filter-btn--active]="soloStockBajo"
-    (click)="toggleStockBajo()">
-    Stock bajo
-  </button>
-</div>
+      <button class="inventory-page__close-btn" (click)="cerrarFiltros()">✕</button>
+    </div>
 
-<button class="inventory-page__apply-btn" (click)="aplicarFiltros()">
-  APLICAR FILTROS
-</button>
+    <div class="inventory-page__filter-group">
+      <h4>Marca</h4>
+
+      <button
+        type="button"
+        class="inventory-page__filter-btn"
+        [class.inventory-page__filter-btn--active]="marcaSeleccionada === null"
+        (click)="seleccionarMarca(null)">
+        Todas
+      </button>
+
+      <button
+        type="button"
+        class="inventory-page__filter-btn"
+        [class.inventory-page__filter-btn--active]="marcaSeleccionada === 'GW'"
+        (click)="seleccionarMarca('GW')">
+        GW
+      </button>
+    </div>
+
+    <div class="inventory-page__filter-group">
+      <h4>Tipo</h4>
+
+      <button
+        type="button"
+        class="inventory-page__filter-btn"
+        [class.inventory-page__filter-btn--active]="tipoSeleccionado === 'Montaña'"
+        (click)="seleccionarTipo('Montaña')">
+        Montaña
+      </button>
+    </div>
+
+    <div class="inventory-page__filter-group">
+      <h4>Estado de stock</h4>
+
+      <button
+        type="button"
+        class="inventory-page__filter-btn"
+        [class.inventory-page__filter-btn--active]="soloStockBajo"
+        (click)="toggleStockBajo()">
+        Stock bajo
+      </button>
+    </div>
+
+    <div class="inventory-page__drawer-actions">
+      <button class="inventory-page__clear-btn" (click)="limpiarFiltros()">
+        Limpiar
+      </button>
+
+      <button class="inventory-page__apply-btn" (click)="aplicarFiltros()">
+        Aplicar filtros
+      </button>
+    </div>
+  </aside>
+  }
+</section>

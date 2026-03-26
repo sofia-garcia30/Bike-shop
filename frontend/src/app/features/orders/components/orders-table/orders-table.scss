@@ -1,0 +1,65 @@
+.orders-table {
+  padding: 1.5rem;
+}
+
+.orders-table__header h3 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.orders-table__header p {
+  margin: 0.45rem 0 1.25rem;
+  color: var(--text-muted);
+}
+
+.orders-table__wrapper {
+  overflow-x: auto;
+}
+
+.orders-table__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table__table th,
+.orders-table__table td {
+  padding: 0.95rem 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.orders-table__table th {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.orders-table__table td {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+.orders-table__badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  background: rgba(255, 122, 61, 0.15);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.orders-table__badge--pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #f6c34a;
+}
+
+.orders-table__badge--received {
+  background: rgba(84, 214, 129, 0.15);
+  color: #6be290;
+}

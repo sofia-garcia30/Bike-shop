@@ -1,0 +1,38 @@
+.supplier-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.supplier-card__item {
+  padding: 1.25rem;
+}
+
+.supplier-card__status {
+  display: inline-flex;
+  margin-bottom: 0.75rem;
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.supplier-card__item h3 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.supplier-card__item p {
+  margin: 0.6rem 0 0;
+  color: var(--text-muted);
+}
+
+@media (max-width: 992px) {
+  .supplier-card {
+    grid-template-columns: 1fr;
+  }
+}

@@ -7,12 +7,38 @@ export const routes: Routes = [
     component: MainLayout,
     children: [
       {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard-page/dashboard-page')
+            .then(m => m.DashboardPage)
+      },
+      {
         path: 'inventory',
         loadComponent: () =>
           import('./features/inventory/pages/inventory-page/inventory-page')
             .then(m => m.InventoryPage)
       },
-      { path: '', redirectTo: 'inventory', pathMatch: 'full' }
+      {
+        path: 'sales',
+        loadComponent: () =>
+          import('./features/sales/pages/sales-page/sales-page')
+            .then(m => m.SalesPage)
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/orders/pages/orders-page/orders-page')
+            .then(m => m.OrdersPage)
+      },
+      {
+        path: '',
+        redirectTo: 'inventory',
+        pathMatch: 'full'
+      }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: 'inventory'
   }
 ];

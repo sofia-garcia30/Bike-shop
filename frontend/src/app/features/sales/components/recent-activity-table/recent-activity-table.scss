@@ -15,6 +15,18 @@
   color: var(--text-muted);
 }
 
+.recent-activity__state {
+  border-radius: 12px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-soft);
+}
+
+.recent-activity__state--error {
+  color: #ff8f8f;
+  background: rgba(255, 90, 90, 0.12);
+}
+
 .recent-activity__table-wrapper {
   overflow-x: auto;
 }
@@ -48,13 +60,17 @@
   align-items: center;
   border-radius: 999px;
   padding: 0.35rem 0.7rem;
-  background: rgba(255, 122, 61, 0.15);
-  color: var(--primary);
   font-size: 0.75rem;
   font-weight: 700;
+  text-transform: capitalize;
 }
 
 .recent-activity__badge--pending {
   background: rgba(255, 193, 7, 0.15);
   color: #f6c34a;
+}
+
+.recent-activity__badge--completed {
+  background: rgba(84, 214, 129, 0.15);
+  color: #6be290;
 }

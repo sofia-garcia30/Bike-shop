@@ -34,7 +34,7 @@
 }
 
 .sales-form__group input,
-.sales-form__group textarea {
+.sales-form__group select {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -45,8 +45,7 @@
   outline: none;
 }
 
-.sales-form__group input::placeholder,
-.sales-form__group textarea::placeholder {
+.sales-form__group input::placeholder {
   color: var(--text-muted);
 }
 
@@ -54,6 +53,22 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+
+.sales-form__message {
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  font-weight: 700;
+}
+
+.sales-form__message--success {
+  background: rgba(84, 214, 129, 0.12);
+  color: #6be290;
+}
+
+.sales-form__message--error {
+  background: rgba(255, 90, 90, 0.12);
+  color: #ff8f8f;
 }
 
 .sales-form__footer {
@@ -82,6 +97,11 @@
   font-family: var(--font-title);
   font-weight: 800;
   cursor: pointer;
+}
+
+.sales-form__primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

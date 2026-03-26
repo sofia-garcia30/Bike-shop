@@ -1,3 +1,90 @@
-<button type="button" class="sales-form__primary" (click)="guardarVenta()">
-  Guardar venta
-</button>
+<section class="sales-form panel">
+  <div class="sales-form__header">
+    <h3>Registrar venta</h3>
+    <p>Ingresa la información de la operación comercial</p>
+  </div>
+
+  <form class="sales-form__body" (ngSubmit)="guardarVenta($event)">
+    <div class="sales-form__group">
+      <label>Cliente</label>
+      <input
+        type="text"
+        name="cliente"
+        [(ngModel)]="cliente"
+        placeholder="Documento del cliente"
+      />
+    </div>
+
+    <div class="sales-form__group">
+      <label>Bicicleta</label>
+      <select name="bicicleta" (change)="seleccionarBicicleta($event)">
+        <option value="">Seleccione...</option>
+
+        @for (bici of bicicletas; track bici.codigo) {
+        <option [value]="bici.codigo">
+          {{ bici.marca }} {{ bici.modelo }}
+        </option>
+        }
+      </select>
+    </div>
+
+    <div class="sales-form__grid">
+      <div class="sales-form__group">
+        <label>Cantidad</label>
+        <input
+          type="number"
+          name="cantidad"
+          [(ngModel)]="cantidad"
+          min="1"
+        />
+      </div>
+
+      <div class="sales-form__group">
+        <label>Forma de pago</label>
+        <select name="formaPago" [(ngModel)]="formaPago">
+          <option value="efectivo">Efectivo</option>
+          <option value="tarjeta">Tarjeta</option>
+          <option value="transferencia">Transferencia</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="sales-form__group">
+      <label>Precio referencial</label>
+      <input
+        type="number"
+        name="precio"
+        [ngModel]="precio"
+        disabled
+      />
+    </div>
+
+    @if (mensaje) {
+    <div class="sales-form__message sales-form__message--success">
+      {{ mensaje }}
+    </div>
+    }
+
+    @if (error) {
+    <div class="sales-form__message sales-form__message--error">
+      {{ error }}
+    </div>
+    }
+
+    <div class="sales-form__footer">
+      <button
+        type="button"
+        class="sales-form__secondary"
+        (click)="resetForm()">
+        Limpiar
+      </button>
+
+      <button
+        type="submit"
+        class="sales-form__primary"
+        [disabled]="guardando">
+        {{ guardando ? 'Guardando...' : 'Guardar venta' }}
+      </button>
+    </div>
+  </form>
+</section>

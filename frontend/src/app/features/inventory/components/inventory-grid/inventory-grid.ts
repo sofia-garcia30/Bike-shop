@@ -1,4 +1,10 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  inject,
+  ChangeDetectorRef
+} from '@angular/core';
 import { ProductCard } from '../product-card/product-card';
 
 import { BicicletaService } from '../../../../core/services/bicicleta';
@@ -12,7 +18,7 @@ import { ProductoInventario } from '../../../../core/models/producto-inventario.
   templateUrl: './inventory-grid.html',
   styleUrl: './inventory-grid.scss'
 })
-export class InventoryGrid implements OnInit {
+export class InventoryGrid implements OnInit, OnDestroy {
   private bicicletaService = inject(BicicletaService);
   private cdr = inject(ChangeDetectorRef);
 
@@ -20,8 +26,15 @@ export class InventoryGrid implements OnInit {
   loading = true;
   error = '';
 
+  private refreshHandler = () => this.cargarTodas();
+
   ngOnInit(): void {
     this.cargarTodas();
+    window.addEventListener('inventory-refresh', this.refreshHandler);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('inventory-refresh', this.refreshHandler);
   }
 
   cargarTodas(): void {
@@ -29,8 +42,8 @@ export class InventoryGrid implements OnInit {
     this.error = '';
 
     this.bicicletaService.getAll().subscribe({
-      next: (data) => this.asignarProductos(data),
-      error: (err) => this.manejarError(err)
+      next: (data: Bicicleta[]) => this.asignarProductos(data),
+      error: (err: any) => this.manejarError(err)
     });
   }
 
@@ -39,8 +52,8 @@ export class InventoryGrid implements OnInit {
     this.error = '';
 
     this.bicicletaService.buscarPorMarca(marca).subscribe({
-      next: (data) => this.asignarProductos(data),
-      error: (err) => this.manejarError(err)
+      next: (data: Bicicleta[]) => this.asignarProductos(data),
+      error: (err: any) => this.manejarError(err)
     });
   }
 
@@ -49,8 +62,8 @@ export class InventoryGrid implements OnInit {
     this.error = '';
 
     this.bicicletaService.buscarPorTipo(tipo).subscribe({
-      next: (data) => this.asignarProductos(data),
-      error: (err) => this.manejarError(err)
+      next: (data: Bicicleta[]) => this.asignarProductos(data),
+      error: (err: any) => this.manejarError(err)
     });
   }
 
@@ -59,8 +72,8 @@ export class InventoryGrid implements OnInit {
     this.error = '';
 
     this.bicicletaService.getStockBajo().subscribe({
-      next: (data) => this.asignarProductos(data),
-      error: (err) => this.manejarError(err)
+      next: (data: Bicicleta[]) => this.asignarProductos(data),
+      error: (err: any) => this.manejarError(err)
     });
   }
 
@@ -83,7 +96,7 @@ export class InventoryGrid implements OnInit {
     this.cdr.detectChanges();
   }
 
-  private manejarError(err: unknown): void {
+  private manejarError(err: any): void {
     console.error('Error al cargar inventario:', err);
     this.error = 'No se pudo cargar el inventario desde el backend.';
     this.loading = false;

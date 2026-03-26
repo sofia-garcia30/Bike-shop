@@ -1,3 +1,141 @@
 <section class="orders-page">
-  <app-supplier-card></app-supplier-card>
+
+  <div class="orders-page__header">
+    <div>
+      <p class="orders-page__eyebrow">Kinetic Precision</p>
+      <h1 class="orders-page__title">PEDIDOS</h1>
+      <p class="orders-page__subtitle">
+        Registra pedidos a proveedores y actualiza el inventario al recibirlos.
+      </p>
+    </div>
+  </div>
+
+  <div class="orders-page__layout">
+
+    <!-- FORMULARIO NUEVO PEDIDO -->
+    <section class="orders-page__form panel">
+      <h3>Nuevo pedido</h3>
+
+      <!-- Proveedor -->
+      <div class="orders-page__group">
+        <label>Proveedor</label>
+        <select [(ngModel)]="idProveedorSeleccionado">
+          <option [value]="null">Seleccione...</option>
+          @for (p of proveedores; track p.id) {
+          <option [value]="p.id">{{ p.nombre }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Agregar bicicleta al pedido -->
+      <div class="orders-page__add-item">
+        <h4>Agregar bicicleta</h4>
+        <div class="orders-page__add-grid">
+          <div class="orders-page__group">
+            <label>Bicicleta</label>
+            <select [(ngModel)]="codigoBicicletaItem">
+              <option [value]="null">Seleccione...</option>
+              @for (b of bicicletas; track b.codigo) {
+              <option [value]="b.codigo">{{ b.marca }} {{ b.modelo }}</option>
+              }
+            </select>
+          </div>
+          <div class="orders-page__group">
+            <label>Cantidad</label>
+            <input type="number" [(ngModel)]="cantidadItem" min="1" />
+          </div>
+          <div class="orders-page__group">
+            <label>Precio costo unitario</label>
+            <input type="number" [(ngModel)]="precioCostoItem" min="0" />
+          </div>
+        </div>
+        <button class="orders-page__add-btn" (click)="agregarDetalle()">
+          + Agregar al pedido
+        </button>
+      </div>
+
+      <!-- Lista de detalles -->
+      @if (detalles.length > 0) {
+      <div class="orders-page__detalles">
+        <h4>Bicicletas en este pedido</h4>
+        @for (d of detalles; track $index) {
+        <div class="orders-page__detalle-item">
+          <span>{{ obtenerNombreBicicleta(d.codigoBicicleta) }}</span>
+          <span>{{ d.cantidad }} uds</span>
+          <span>$ {{ d.precioCostoUnitario | number:'1.0-0':'es-CO' }}</span>
+          <button class="orders-page__remove-btn" (click)="eliminarDetalle($index)">✕</button>
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Mensajes -->
+      @if (mensajeExito) {
+      <div class="orders-page__msg orders-page__msg--success">{{ mensajeExito }}</div>
+      }
+      @if (errorForm) {
+      <div class="orders-page__msg orders-page__msg--error">{{ errorForm }}</div>
+      }
+
+      <!-- Botones -->
+      <div class="orders-page__form-footer">
+        <button class="orders-page__btn-secondary" (click)="resetForm()">Limpiar</button>
+        <button class="orders-page__btn-primary" (click)="guardarPedido()" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : 'Registrar pedido' }}
+        </button>
+      </div>
+    </section>
+
+    <!-- HISTORIAL DE PEDIDOS -->
+    <section class="orders-page__list panel">
+      <h3>Historial de pedidos</h3>
+
+      @if (loadingPedidos) {
+      <div class="orders-page__state">Cargando pedidos...</div>
+      } @else if (errorPedidos) {
+      <div class="orders-page__state orders-page__state--error">{{ errorPedidos }}</div>
+      } @else if (pedidos.length === 0) {
+      <div class="orders-page__state">No hay pedidos registrados.</div>
+      } @else {
+      <div class="orders-page__table-wrapper">
+        <table class="orders-page__table">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Proveedor</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+          </thead>
+          <tbody>
+          @for (pedido of pedidos; track pedido.id) {
+          <tr>
+            <td>{{ pedido.id }}</td>
+            <td>{{ pedido.nombreProveedor }}</td>
+            <td>{{ pedido.fecha | date:'dd/MM/yyyy HH:mm':'':'es-CO' }}</td>
+            <td>
+                <span class="orders-page__badge"
+                      [class.orders-page__badge--pendiente]="pedido.estado === 'pendiente'"
+                      [class.orders-page__badge--recibido]="pedido.estado === 'recibido'">
+                  {{ pedido.estado }}
+                </span>
+            </td>
+            <td>
+              @if (pedido.estado === 'pendiente') {
+              <button class="orders-page__recibir-btn" (click)="marcarRecibido(pedido.id)">
+                Marcar recibido
+              </button>
+              }
+            </td>
+          </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+      }
+    </section>
+
+  </div>
+
 </section>

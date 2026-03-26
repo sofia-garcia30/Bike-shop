@@ -1,56 +1,88 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';          // ✅ CurrencyPipe eliminado
 import { Router } from '@angular/router';
+import { DashboardService } from '../../../../core/services/dashboard.service'; // ✅ .service añadido
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
+  imports: [CommonModule],                               // ✅ CurrencyPipe eliminado
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss'
 })
-export class DashboardPage {
+export class DashboardPage implements OnInit {
+  private dashboardService = inject(DashboardService);
+  private router = inject(Router);
 
-  constructor(private router: Router) {}
+  loading = true;
+  error = '';
 
-  metrics = [
-    { label: 'Ventas del día', value: '$ 4.200.000', note: '+12% vs ayer' },
-    { label: 'Stock total', value: '148', note: 'Unidades registradas' },
-    { label: 'Alertas activas', value: '03', note: 'Stock crítico' }
-  ];
+  resumen: any = null;
+  topBicicletas: any[] = [];
 
-  alerts = [
-    'GW MTB 29 con stock bajo',
-    'Pedido pendiente con proveedor',
-    'Venta pendiente de confirmar'
-  ];
+  alerts: string[] = [];
+  activity: any[] = [];
 
-  activity = [
-    { title: 'Venta registrada', detail: 'GW MTB 29 - Laura Gómez', date: 'Hoy, 10:20 AM' },
-    { title: 'Pedido creado', detail: 'Urban Wheels - 8 unidades', date: 'Hoy, 09:10 AM' },
-    { title: 'Inventario actualizado', detail: 'Ruta Pro ajustado', date: 'Ayer, 05:40 PM' }
-  ];
+  ngOnInit(): void {
+    this.cargarDashboard();
+  }
 
-  // 🔥 BOTONES FUNCIONALES
-  irAVentas() {
+  cargarDashboard(): void {
+    this.loading = true;
+    this.error = '';
+
+    this.dashboardService.getResumen().subscribe({
+      next: (data: any) => {                             // ✅ tipo añadido
+        this.resumen = data;
+        this.loading = false;
+        this.alerts = [];
+        if (data.sinStock > 0) {
+          this.alerts.push(`${data.sinStock} bicicleta(s) sin stock`);
+        }
+        if (data.stockBajo > 0) {
+          this.alerts.push(`${data.stockBajo} bicicleta(s) con stock bajo`);
+        }
+        if (this.alerts.length === 0) {
+          this.alerts.push('Stock en niveles normales');
+        }
+      },
+      error: (err: any) => {                             // ✅ tipo añadido
+        console.error('Error cargando dashboard', err);
+        this.error = 'No se pudo cargar el resumen.';
+        this.loading = false;
+      }
+    });
+
+    this.dashboardService.getTopBicicletas().subscribe({
+      next: (data: any[]) => {                           // ✅ tipo añadido
+        this.topBicicletas = data.slice(0, 5);
+      },
+      error: (err: any) => {                             // ✅ tipo añadido
+        console.error('Error cargando top bicicletas', err);
+      }
+    });
+  }
+
+  irAVentas(): void {
     this.router.navigate(['/sales']);
   }
 
-  irAPedidos() {
+  irAPedidos(): void {
     this.router.navigate(['/orders']);
   }
 
-  exportar() {
-    const data = [
-      { producto: 'GW MTB 29', stock: 10, precio: 1800000 }
-    ];
-
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+  exportar(): void {
+    const data = {
+      resumen: this.resumen,
+      topBicicletas: this.topBicicletas,
+      fecha: new Date().toLocaleString('es-CO')
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
-
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'reporte.json';
+    a.download = `reporte-dashboard-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
-
     window.URL.revokeObjectURL(url);
   }
 }

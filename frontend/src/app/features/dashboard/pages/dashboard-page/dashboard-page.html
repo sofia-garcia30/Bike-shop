@@ -1,97 +1,98 @@
 <section class="dashboard-page">
+
   <div class="dashboard-page__header">
     <div>
       <p class="dashboard-page__eyebrow">Kinetic Precision</p>
       <h1 class="dashboard-page__title">DASHBOARD</h1>
       <p class="dashboard-page__subtitle">
-        Visualiza el estado general del negocio, el inventario y la operación comercial en un solo lugar.
+        Resumen general del negocio — ventas, inventario y actividad reciente.
       </p>
     </div>
-
-    <!-- 🔥 BOTÓN FUNCIONAL -->
     <button class="dashboard-page__action-btn" (click)="exportar()">
       EXPORTAR REPORTE
     </button>
   </div>
 
+  @if (loading) {
+  <div class="dashboard-page__state">Cargando dashboard...</div>
+  } @else if (error) {
+  <div class="dashboard-page__state dashboard-page__state--error">{{ error }}</div>
+  } @else {
+
+  <!-- MÉTRICAS PRINCIPALES -->
   <div class="dashboard-page__metrics">
-    @for (metric of metrics; track metric.label) {
     <article class="dashboard-page__metric panel">
-      <p>{{ metric.label }}</p>
-      <h3>{{ metric.value }}</h3>
-      <span>{{ metric.note }}</span>
+      <p class="dashboard-page__metric-label">Total ventas</p>
+      <h3>{{ resumen?.totalVentas ?? 0 }}</h3>
+      <span>Operaciones registradas</span>
     </article>
-    }
+
+    <article class="dashboard-page__metric panel">
+      <p class="dashboard-page__metric-label">Total clientes</p>
+      <h3>{{ resumen?.totalClientes ?? 0 }}</h3>
+      <span>Clientes registrados</span>
+    </article>
+
+    <article class="dashboard-page__metric panel">
+      <p class="dashboard-page__metric-label">Bicicletas registradas</p>
+      <h3>{{ resumen?.totalBicicletas ?? 0 }}</h3>
+      <span>En catálogo</span>
+    </article>
+
+    <article class="dashboard-page__metric panel">
+      <p class="dashboard-page__metric-label">Sin stock</p>
+      <h3 [class.dashboard-page__metric-danger]="(resumen?.sinStock ?? 0) > 0">
+        {{ resumen?.sinStock ?? 0 }}
+      </h3>
+      <span>Productos agotados</span>
+    </article>
   </div>
 
-  <div class="dashboard-page__layout">
-    <section class="dashboard-page__summary panel">
-      <div class="dashboard-page__block-header">
-        <h3>Resumen operativo</h3>
-        <p>Panorama general del sistema</p>
-      </div>
+  <!-- LAYOUT INFERIOR -->
+  <div class="dashboard-page__body">
 
-      <div class="dashboard-page__summary-grid">
-        <div class="dashboard-page__summary-card">
-          <span>Inventario disponible</span>
-          <strong>97%</strong>
-        </div>
-
-        <div class="dashboard-page__summary-card">
-          <span>Pedidos activos</span>
-          <strong>08</strong>
-        </div>
-
-        <div class="dashboard-page__summary-card">
-          <span>Ventas completadas</span>
-          <strong>18</strong>
-        </div>
-
-        <div class="dashboard-page__summary-card">
-          <span>Clientes del día</span>
-          <strong>12</strong>
-        </div>
-      </div>
-    </section>
-
+    <!-- ALERTAS -->
     <section class="dashboard-page__alerts panel">
-      <div class="dashboard-page__block-header">
-        <h3>Alertas</h3>
-        <p>Eventos que requieren atención</p>
-      </div>
-
-      <div class="dashboard-page__alerts-list">
+      <h3>Estado del inventario</h3>
+      <ul class="dashboard-page__alert-list">
         @for (alert of alerts; track alert) {
-        <div class="dashboard-page__alert-item">
+        <li class="dashboard-page__alert-item">
+          <span class="dashboard-page__alert-dot"></span>
           {{ alert }}
-        </div>
+        </li>
         }
-      </div>
+      </ul>
     </section>
-  </div>
 
-  <section class="dashboard-page__activity panel">
-    <div class="dashboard-page__block-header">
-      <h3>Actividad reciente</h3>
-      <p>Últimos movimientos registrados en el sistema</p>
-    </div>
-
-    <div class="dashboard-page__activity-list">
-      @for (item of activity; track item.title + item.date) {
-      <div class="dashboard-page__activity-item">
-        <div>
-          <strong>{{ item.title }}</strong>
-          <p>{{ item.detail }}</p>
-        </div>
-        <span>{{ item.date }}</span>
-      </div>
+    <!-- TOP BICICLETAS -->
+    <section class="dashboard-page__top panel">
+      <h3>Bicicletas más vendidas</h3>
+      @if (topBicicletas.length === 0) {
+      <p class="dashboard-page__empty">No hay ventas registradas aún.</p>
+      } @else {
+      <ul class="dashboard-page__top-list">
+        @for (item of topBicicletas; track item.codigo) {
+        <li class="dashboard-page__top-item">
+          <span class="dashboard-page__top-name">{{ item.marca }} {{ item.modelo }}</span>
+          <span class="dashboard-page__top-units">{{ item.totalVendido }} uds</span>
+        </li>
+        }
+      </ul>
       }
-    </div>
-  </section>
+    </section>
 
-  <!-- 🔥 BOTONES EXTRA (OPCIONAL PERO PRO) -->
-  <div style="display:flex; gap:1rem; margin-top:1rem;">
-    <button class="dashboard-page__action-btn" (click)="irAVentas()">Nueva venta</button>
-    <button class="dashboard-page__action-btn" (click)="irAPedidos()">Nuevo pedido</button>
   </div>
+
+  <!-- BOTONES DE ACCIÓN -->
+  <div class="dashboard-page__actions">
+    <button class="dashboard-page__action-btn" (click)="irAVentas()">
+      + NUEVA VENTA
+    </button>
+    <button class="dashboard-page__action-btn dashboard-page__action-btn--secondary" (click)="irAPedidos()">
+      + NUEVO PEDIDO
+    </button>
+  </div>
+
+  }
+
 </section>

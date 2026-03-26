@@ -8,7 +8,8 @@
       </p>
     </div>
 
-    <button class="dashboard-page__action-btn">
+    <!-- 🔥 BOTÓN FUNCIONAL -->
+    <button class="dashboard-page__action-btn" (click)="exportar()">
       EXPORTAR REPORTE
     </button>
   </div>
@@ -87,4 +88,10 @@
       }
     </div>
   </section>
+
+  <!-- 🔥 BOTONES EXTRA (OPCIONAL PERO PRO) -->
+  <div style="display:flex; gap:1rem; margin-top:1rem;">
+    <button class="dashboard-page__action-btn" (click)="irAVentas()">Nueva venta</button>
+    <button class="dashboard-page__action-btn" (click)="irAPedidos()">Nuevo pedido</button>
+  </div>
 </section>

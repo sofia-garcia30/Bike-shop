@@ -1,86 +1,62 @@
 .navbar {
-  height: 72px;
-  display: grid;
-  grid-template-columns: 220px 1fr auto;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 1.5rem;
+
+  background: #0f141a;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* LEFT */
+.navbar__brand {
+  font-weight: 800;
+  color: #ff7a3d;
+  font-size: 1.2rem;
+}
+
+/* CENTER */
+.navbar__center {
+  display: flex;
+  gap: 2rem;
+}
+
+.navbar__center a {
+  color: #aaa;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.navbar__center a:hover {
+  color: white;
+}
+
+.navbar__center a.active {
+  color: #ff7a3d;
+}
+
+/* RIGHT */
+.navbar__right {
+  display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0 1.5rem;
-  background: rgba(15, 17, 20, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 20px 40px -18px rgba(255, 95, 0, 0.16);
 }
 
-.navbar__brand {
-  font-family: var(--font-title);
-  font-size: 1.65rem;
-  font-style: italic;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-  color: var(--primary-strong);
-}
-
-.navbar__nav {
-  display: flex;
-  justify-content: center;
-  gap: 2.25rem;
-}
-
-.navbar__link {
-  position: relative;
-  color: var(--text-soft);
-  font-family: var(--font-title);
-  font-size: 0.95rem;
-  font-weight: 700;
-  transition: color 0.2s ease;
-}
-
-.navbar__link:hover {
-  color: var(--text);
-}
-
-.navbar__link.active {
-  color: var(--primary);
-}
-
-.navbar__link.active::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.85rem;
-  height: 2px;
-  background: var(--primary);
-}
-
-.navbar__actions {
-  display: flex;
-  gap: 0.75rem;
+.navbar__search {
+  background: #1b2128;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: white;
 }
 
 .navbar__icon {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 10px;
   background: transparent;
-  color: var(--text-soft);
+  border: none;
+  color: white;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.navbar__icon:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text);
-}
-
-@media (max-width: 992px) {
-  .navbar {
-    grid-template-columns: 1fr auto;
-  }
-
-  .navbar__nav {
-    display: none;
-  }
 }

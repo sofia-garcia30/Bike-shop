@@ -10,7 +10,18 @@ export class VentaService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/ventas`;
 
-  crearVenta(data: any): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+  crearVenta(payload: {
+    documentoCliente: string;
+    formaPago: string;
+    detalles: {
+      codigoBicicleta: number;
+      cantidad: number;
+    }[];
+  }): Observable<any> {
+    return this.http.post(this.apiUrl, payload);
+  }
+
+  getVentas(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 }

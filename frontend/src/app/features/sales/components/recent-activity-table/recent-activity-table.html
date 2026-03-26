@@ -4,6 +4,19 @@
     <p>Resumen de las últimas ventas registradas</p>
   </div>
 
+  @if (loading) {
+  <div class="recent-activity__state">
+    Cargando ventas...
+  </div>
+  } @else if (error) {
+  <div class="recent-activity__state recent-activity__state--error">
+    {{ error }}
+  </div>
+  } @else if (ventas.length === 0) {
+  <div class="recent-activity__state">
+    No hay ventas registradas.
+  </div>
+  } @else {
   <div class="recent-activity__table-wrapper">
     <table class="recent-activity__table">
       <thead>
@@ -16,22 +29,24 @@
       </tr>
       </thead>
       <tbody>
-      @for (activity of activities; track activity.cliente + activity.fecha) {
+      @for (venta of ventas; track venta.id) {
       <tr>
-        <td>{{ activity.cliente }}</td>
-        <td>{{ activity.producto }}</td>
-        <td>{{ activity.fecha }}</td>
-        <td>{{ activity.total }}</td>
+        <td>{{ venta.nombreCliente }}</td>
+        <td>{{ obtenerProducto(venta) }}</td>
+        <td>{{ obtenerFecha(venta) }}</td>
+        <td>{{ venta.total | currency:'COP':'symbol':'1.0-0':'es-CO' }}</td>
         <td>
-              <span
-                class="recent-activity__badge"
-                [class.recent-activity__badge--pending]="activity.estado === 'Pendiente'">
-                {{ activity.estado }}
-              </span>
+                <span
+                  class="recent-activity__badge"
+                  [class.recent-activity__badge--pending]="venta.estado === 'pendiente'"
+                  [class.recent-activity__badge--completed]="venta.estado === 'completada'">
+                  {{ venta.estado }}
+                </span>
         </td>
       </tr>
       }
       </tbody>
     </table>
   </div>
+  }
 </section>

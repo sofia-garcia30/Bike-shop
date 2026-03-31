@@ -79,3 +79,42 @@ CREATE TABLE detalle_venta (
                                FOREIGN KEY (codigo_bicicleta) REFERENCES bicicleta(codigo)
 );
 
+
+
+-- 1. TABLA USUARIO
+CREATE TABLE usuario (
+                         id INT PRIMARY KEY AUTO_INCREMENT,
+                         nombre VARCHAR(100) NOT NULL,
+                         email VARCHAR(100) NOT NULL UNIQUE,
+                         password VARCHAR(255) NOT NULL,
+                         rol VARCHAR(20) NOT NULL DEFAULT 'VENDEDOR',
+                         activo BOOLEAN DEFAULT TRUE,
+                         fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. AGREGAR id_usuario A VENTA
+ALTER TABLE venta
+    ADD COLUMN id_usuario INT,
+    ADD CONSTRAINT fk_venta_usuario
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id);
+
+-- 3. AGREGAR id_usuario A PEDIDO
+ALTER TABLE pedido
+    ADD COLUMN id_usuario INT,
+    ADD CONSTRAINT fk_pedido_usuario
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id);
+
+-- 4. USUARIO ADMIN INICIAL
+-- password: Admin123* (encriptada con BCrypt)
+INSERT INTO usuario (nombre, email, password, rol)
+VALUES (
+           'Administrador',
+           'admin@tienda.com',
+           '$2a$10$AYXdkba1eB/LmJSVKwsjQeF/5F4T2ew1PKA6t7cYTOKspPfzgyiUm',
+           'ADMIN'
+       );
+
+-- NOTAS:
+-- La contraseña 'Admin123*' en BCrypt es:
+-- $2a$10$AYXdkba1eB/LmJSVKwsjQeF/5F4T2ew1PKA6t7cYTOKspPfzgyiUm
+-- Cambiarla en producción desde el endpoint PUT /api/usuarios/{id}

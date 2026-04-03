@@ -15,6 +15,8 @@ public class VentaResponseDTO {
     private Integer id;
     private String documentoCliente;
     private String nombreCliente;
+    private Integer idEmpleado;
+    private String nombreEmpleado;
     private LocalDateTime fecha;
     private BigDecimal total;
     private String formaPago;

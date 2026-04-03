@@ -17,6 +17,8 @@ import com.bike.shop.repository.ProveedorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.bike.shop.entity.Usuario;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,6 +48,12 @@ public class PedidoService {
 
     @Transactional
     public PedidoResponseDTO crear(PedidoRequestDTO dto) {
+
+        Usuario usuarioLogueado = (Usuario) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
         // Validar proveedor
         Proveedor proveedor = proveedorRepository.findById(dto.getIdProveedor())
                 .orElseThrow(() -> new RecursoNoEncontradoException(
@@ -58,6 +66,7 @@ public class PedidoService {
         // Crear pedido
         Pedido pedido = new Pedido();
         pedido.setProveedor(proveedor);
+        pedido.setUsuario(usuarioLogueado);
         pedido.setFecha(LocalDateTime.now());
         pedido.setEstado("pendiente");
         Pedido guardado = pedidoRepository.save(pedido);
@@ -109,6 +118,8 @@ public class PedidoService {
                 p.getId(),
                 p.getProveedor().getId(),
                 p.getProveedor().getNombre(),
+                p.getUsuario().getId(),
+                p.getUsuario().getNombre(),
                 p.getFecha(),
                 p.getEstado(),
                 detalles

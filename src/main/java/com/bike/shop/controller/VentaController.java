@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/ventas")
@@ -22,33 +23,39 @@ public class VentaController {
     private final VentaService ventaService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<VentaResponseDTO>> listarTodas() {
         return ResponseEntity.ok(ventaService.listarTodas());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VentaResponseDTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(ventaService.buscarPorId(id));
     }
 
     @GetMapping("/cliente/{documento}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<VentaResponseDTO>> buscarPorCliente(
             @PathVariable String documento) {
         return ResponseEntity.ok(ventaService.buscarPorCliente(documento));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     public ResponseEntity<VentaResponseDTO> crear(@RequestBody VentaRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ventaService.crear(dto));
     }
 
     @PatchMapping("/{id}/cancelar")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     public ResponseEntity<VentaResponseDTO> cancelar(@PathVariable Integer id) {
         return ResponseEntity.ok(ventaService.cancelar(id));
     }
 
     @GetMapping("/reporte")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<VentaResponseDTO>> reporte(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime inicio,

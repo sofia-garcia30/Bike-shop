@@ -26,6 +26,10 @@ public class Venta {
     @JoinColumn(name = "documento_cliente", nullable = false)
     private Cliente cliente;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
     @Column(name = "fecha")
     private LocalDateTime fecha;
 

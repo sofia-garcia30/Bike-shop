@@ -7,6 +7,7 @@ import com.bike.shop.dto.response.VentaResponseDTO;
 import com.bike.shop.entity.Cliente;
 import com.bike.shop.entity.DetalleVenta;
 import com.bike.shop.entity.Venta;
+import com.bike.shop.entity.Usuario;
 import com.bike.shop.exception.RecursoNoEncontradoException;
 import com.bike.shop.exception.ValidacionException;
 import com.bike.shop.repository.BicicletaRepository;
@@ -17,10 +18,13 @@ import com.bike.shop.entity.Bicicleta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.math.BigDecimal;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +35,46 @@ public class VentaService {
     private final BicicletaRepository bicicletaRepository;
     private final DetalleVentaRepository detalleVentaRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     // GET todas las ventas
     public List<VentaResponseDTO> listarTodas() {
         return ventaRepository.findAll()
+                .stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    // GET ventas del usuario logueado (para empleado)
+    public List<VentaResponseDTO> listarMisVentas() {
+        Usuario usuarioLogueado = (Usuario) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        return ventaRepository.findByUsuarioId(
+                        usuarioLogueado.getId().longValue())
+                .stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<VentaResponseDTO> listarPorUsuario(Long usuarioId) {
+        return ventaRepository.findByUsuarioId(usuarioId)
+                .stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    // GET mis ventas por fecha (para empleado)
+    public List<VentaResponseDTO> listarMisVentasPorFecha(
+            LocalDateTime inicio, LocalDateTime fin) {
+        Usuario usuarioLogueado = (Usuario) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        return ventaRepository.findByUsuarioIdAndFechaBetween(
+                        usuarioLogueado.getId().longValue(), inicio, fin)
                 .stream()
                 .map(this::toResponseDTO)
                 .collect(Collectors.toList());
@@ -57,6 +98,12 @@ public class VentaService {
     // POST crear venta
     @Transactional
     public VentaResponseDTO crear(VentaRequestDTO dto) {
+        // ✅ Obtener usuario logueado del token
+        Usuario usuarioLogueado = (Usuario) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
         // Validar cliente
         Cliente cliente = clienteRepository.findById(dto.getDocumentoCliente())
                 .orElseThrow(() -> new RecursoNoEncontradoException(
@@ -69,15 +116,16 @@ public class VentaService {
         // Crear venta
         Venta venta = new Venta();
         venta.setCliente(cliente);
+        venta.setUsuario(usuarioLogueado); // ✅ agregar usuario
         venta.setFecha(LocalDateTime.now());
         venta.setFormaPago(dto.getFormaPago());
         venta.setEstado("completada");
         venta.setTotal(BigDecimal.ZERO);
         Venta guardada = ventaRepository.save(venta);
+        ventaRepository.flush();
 
-        // Crear detalles — los triggers manejan stock y total
+        // Crear detalles
         dto.getDetalles().forEach(d -> {
-            // ✅ Una sola llamada a findById
             Bicicleta bicicleta = bicicletaRepository.findById(d.getCodigoBicicleta())
                     .orElseThrow(() -> new RecursoNoEncontradoException(
                             "No existe bicicleta con código " + d.getCodigoBicicleta()));
@@ -88,11 +136,18 @@ public class VentaService {
             detalle.setCantidad(d.getCantidad());
             detalle.setPrecioUnitario(BigDecimal.ZERO);
             detalle.setSubtotal(BigDecimal.ZERO);
-            detalleVentaRepository.save(detalle);
+            detalle = detalleVentaRepository.save(detalle);
+            detalleVentaRepository.flush();
         });
 
-        // Recargar venta con total actualizado por trigger
-        return toResponseDTO(ventaRepository.findById(guardada.getId()).get());
+        entityManager.flush();
+        entityManager.clear();
+
+        // Recargar venta con valores actualizados por triggers
+        Venta ventaActualizada = ventaRepository.findById(guardada.getId()).get();
+        return toResponseDTO(ventaActualizada);
+
+
     }
 
     // PATCH cancelar venta
@@ -127,6 +182,8 @@ public class VentaService {
                 v.getId(),
                 v.getCliente().getDocumento(),
                 v.getCliente().getNombre(),
+                v.getUsuario().getId(),
+                v.getUsuario().getNombre(),
                 v.getFecha(),
                 v.getTotal(),
                 v.getFormaPago(),

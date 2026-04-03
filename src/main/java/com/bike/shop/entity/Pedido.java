@@ -22,6 +22,10 @@ public class Pedido {
     @JoinColumn(name = "id_proveedor", nullable = false)
     private Proveedor proveedor;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
     @Column
     private LocalDateTime fecha;
 

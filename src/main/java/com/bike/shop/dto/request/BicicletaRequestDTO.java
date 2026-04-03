@@ -16,4 +16,5 @@ public class BicicletaRequestDTO {
     private BigDecimal precioCosto;
     private BigDecimal precioVenta;
     private String descripcion;
+    private String imagenUrl;
 }

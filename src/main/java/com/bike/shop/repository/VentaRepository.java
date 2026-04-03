@@ -8,12 +8,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Repository
 public interface VentaRepository extends JpaRepository<Venta, Integer> {
     List<Venta> findByClienteDocumento(String documento);
     List<Venta> findByEstado(String estado);
     List<Venta> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
+
+    // ⭐ NUEVOS MÉTODOS PARA REPORTES POR USUARIO
+    List<Venta> findByUsuarioId(Long usuarioId);
+    List<Venta> findByUsuarioIdOrderByFechaDesc(Long usuarioId);
+
+    // ⭐ NUEVO: Ventas por usuario y rango de fechas
+    List<Venta> findByUsuarioIdAndFechaBetween(Long usuarioId, LocalDateTime inicio, LocalDateTime fin);
+
+    // ⭐ NUEVO: Contar ventas por usuario
+    long countByUsuarioId(Long usuarioId);
+
+    // ⭐ NUEVO: Total de ventas por usuario
+    @Query("SELECT SUM(v.total) FROM Venta v WHERE v.usuario.id = :usuarioId")
+    BigDecimal sumTotalByUsuarioId(Long usuarioId);
 
     @Query("SELECT dv.bicicleta.codigo, " +
             "dv.bicicleta.marca, " +

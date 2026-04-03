@@ -139,7 +139,8 @@ public class BicicletaService {
                 b.getCantidad(),
                 b.getStockMinimo(),
                 b.getStockMaximo(),
-                b.getDescripcion()
+                b.getDescripcion(),
+                b.getImagenUrl()
         );
     }
 
@@ -152,6 +153,7 @@ public class BicicletaService {
         b.setPrecioCosto(dto.getPrecioCosto());
         b.setPrecioVenta(dto.getPrecioVenta());
         b.setDescripcion(dto.getDescripcion());
+        b.setImagenUrl(dto.getImagenUrl());
         b.setCantidad(0);
         b.setStockMinimo(5);
         b.setStockMaximo(50);

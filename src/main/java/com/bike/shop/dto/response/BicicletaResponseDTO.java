@@ -20,6 +20,7 @@ public class BicicletaResponseDTO {
     private Integer stockMinimo;
     private Integer stockMaximo;
     private String descripcion;
+    private String imagenUrl;
 
 
 }

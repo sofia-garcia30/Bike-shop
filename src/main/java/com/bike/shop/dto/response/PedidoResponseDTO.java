@@ -14,6 +14,8 @@ public class PedidoResponseDTO {
     private Integer id;
     private Integer idProveedor;
     private String nombreProveedor;
+    private Integer idUsuario;
+    private String nombreUsuario;
     private LocalDateTime fecha;
     private String estado;
     private List<DetallePedidoResponseDTO> detalles;

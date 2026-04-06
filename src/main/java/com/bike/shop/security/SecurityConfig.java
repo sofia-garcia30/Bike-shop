@@ -121,7 +121,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/pedidos/recibido/**")
                         .hasAnyRole("ADMIN", "EMPLEADO")         // marcar recibido ✅
                         .requestMatchers(HttpMethod.GET, "/api/pedidos/**")
-                        .hasRole("ADMIN")                        // ver pedidos ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")                        // ver pedidos ✅
                         .requestMatchers(HttpMethod.POST, "/api/pedidos")
                         .hasRole("ADMIN")                        // crear pedidos ✅
 

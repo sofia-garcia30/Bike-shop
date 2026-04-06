@@ -87,6 +87,13 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No existe usuario con id " + id));
+
+        if ("ADMIN".equals(usuario.getRol())) {
+            long adminsActivos = usuarioRepository.countByRolAndActivoTrue("ADMIN");
+            if (adminsActivos <= 1) {
+                throw new ValidacionException("No se puede desactivar al único administrador del sistema");
+            }
+        }
         usuario.setActivo(false);
         return toDTO(usuarioRepository.save(usuario));
     }

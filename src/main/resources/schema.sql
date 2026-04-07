@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS tienda_bicicletas;
 USE tienda_bicicletas;
 
 -- 1. PROVEEDOR
-CREATE TABLE proveedor (
+CREATE TABLE IF NOT EXISTS proveedor (
                            id INT PRIMARY KEY AUTO_INCREMENT,
                            nombre VARCHAR(100) NOT NULL,
                            telefono VARCHAR(20),
@@ -11,7 +11,7 @@ CREATE TABLE proveedor (
 );
 
 -- 2. BICICLETA
-CREATE TABLE bicicleta (
+CREATE TABLE IF NOT EXISTS bicicleta (
                            codigo INT PRIMARY KEY AUTO_INCREMENT,
                            marca VARCHAR(50) NOT NULL,
                            modelo VARCHAR(100) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE bicicleta (
 );
 
 -- 3. USUARIO (lo pongo antes para evitar errores de orden)
-CREATE TABLE usuario (
+CREATE TABLE IF NOT EXISTS usuario (
                          id INT PRIMARY KEY AUTO_INCREMENT,
                          nombre VARCHAR(100) NOT NULL,
                          email VARCHAR(100) NOT NULL UNIQUE,
@@ -37,7 +37,7 @@ CREATE TABLE usuario (
 );
 
 -- 4. CLIENTE
-CREATE TABLE cliente (
+CREATE TABLE IF NOT EXISTS cliente (
                          documento VARCHAR(20) PRIMARY KEY,
                          nombre VARCHAR(100) NOT NULL,
                          telefono VARCHAR(20),
@@ -46,7 +46,7 @@ CREATE TABLE cliente (
 );
 
 -- 5. PEDIDO (con CONSTRAINT explícitos)
-CREATE TABLE pedido (
+CREATE TABLE IF NOT EXISTS pedido (
                         id INT PRIMARY KEY AUTO_INCREMENT,
                         id_proveedor INT NOT NULL,
                         id_usuario INT NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE pedido (
 );
 
 -- 6. DETALLE_PEDIDO
-CREATE TABLE detalle_pedido (
+CREATE TABLE IF NOT EXISTS detalle_pedido (
                                 id INT PRIMARY KEY AUTO_INCREMENT,
                                 id_pedido INT NOT NULL,
                                 codigo_bicicleta INT NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE detalle_pedido (
 );
 
 -- 7. VENTA
-CREATE TABLE venta (
+CREATE TABLE IF NOT EXISTS venta (
                        id INT PRIMARY KEY AUTO_INCREMENT,
                        documento_cliente VARCHAR(20) NOT NULL,
                        id_usuario INT NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE venta (
 );
 
 -- 8. DETALLE_VENTA
-CREATE TABLE detalle_venta (
+CREATE TABLE IF NOT EXISTS detalle_venta (
                                id INT PRIMARY KEY AUTO_INCREMENT,
                                id_venta INT NOT NULL,
                                codigo_bicicleta INT NOT NULL,
@@ -101,7 +101,7 @@ CREATE TABLE detalle_venta (
 );
 
 -- 9. USUARIO ADMIN INICIAL
-INSERT INTO usuario (nombre, email, password, rol)
+INSERT IGNORE INTO usuario (nombre, email, password, rol)
 VALUES (
            'Administrador',
            'admin@tienda.com',

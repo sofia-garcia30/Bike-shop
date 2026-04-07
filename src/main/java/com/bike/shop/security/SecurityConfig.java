@@ -85,7 +85,6 @@ public class SecurityConfig {
         return source;
     }
 
-    // ─── Security Filter Chain ───────────────────────────────────
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -95,74 +94,76 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
+                        // ✅ PERMITIR TODAS LAS PETICIONES OPTIONS (necesario para CORS)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         // ── PÚBLICO ──────────────────────────────────────
                         .requestMatchers("/auth/**").permitAll()
 
                         // ── BICICLETAS ───────────────────────────────────
                         .requestMatchers(HttpMethod.GET, "/api/bicicletas/**")
-                        .hasAnyRole("ADMIN", "EMPLEADO")        // ver ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.POST, "/api/bicicletas")
-                        .hasRole("ADMIN")                        // crear ✅
+                        .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/bicicletas/**")
-                        .hasRole("ADMIN")                        // editar ✅
+                        .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/bicicletas/**")
-                        .hasRole("ADMIN")                        // eliminar ✅
+                        .hasRole("ADMIN")
 
                         // ── CLIENTES ─────────────────────────────────────
                         .requestMatchers(HttpMethod.GET, "/api/clientes/**")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // ver ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.POST, "/api/clientes")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // crear ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.PUT, "/api/clientes/**")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // editar ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
 
                         // ── VENTAS ───────────────────────────────────────
                         .requestMatchers(HttpMethod.POST, "/api/ventas")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // registrar ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/ventas/mis-ventas/**")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // sus ventas ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/ventas/**")
-                        .hasRole("ADMIN")                        // todas las ventas ✅
+                        .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/ventas/**")
                         .hasAnyRole("ADMIN", "EMPLEADO")
 
                         // ── PEDIDOS ──────────────────────────────────────
                         .requestMatchers(HttpMethod.PATCH, "/api/pedidos/recibido/**")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // marcar recibido ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/pedidos/**")
-                        .hasRole("ADMIN")                        // ver pedidos ✅
+                        .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/pedidos")
-                        .hasRole("ADMIN")                        // crear pedidos ✅
+                        .hasRole("ADMIN")
 
                         // ── PROVEEDORES ──────────────────────────────────
                         .requestMatchers(HttpMethod.GET, "/api/proveedores/**")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // ver ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.POST, "/api/proveedores")
-                        .hasRole("ADMIN")                        // crear ✅
+                        .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/proveedores/**")
-                        .hasRole("ADMIN")                        // editar ✅
+                        .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/proveedores/**")
-                        .hasRole("ADMIN")                        // eliminar ✅
+                        .hasRole("ADMIN")
 
                         // ── DASHBOARD ────────────────────────────────────
                         .requestMatchers(HttpMethod.GET, "/api/dashboard")
-                        .hasAnyRole("ADMIN", "EMPLEADO")         // básico ✅
+                        .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/dashboard/top-bicicletas")
-                        .hasRole("ADMIN")                        // top bicicletas ✅
+                        .hasRole("ADMIN")
 
                         // ── REPORTES ─────────────────────────────────────
                         .requestMatchers(HttpMethod.GET, "/api/reportes/ventas/pdf/mis-ventas").hasAnyRole("ADMIN", "EMPLEADO")
-                        .requestMatchers(HttpMethod.GET, "/api/reportes/ventas/excel/mis-ventas").hasAnyRole("ADMIN", "EMPLEADO")         // sus reportes ✅
+                        .requestMatchers(HttpMethod.GET, "/api/reportes/ventas/excel/mis-ventas").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET,"/api/reportes/**")
-                        .hasRole("ADMIN")                        // reportes globales ✅
+                        .hasRole("ADMIN")
 
                         // ── USUARIOS ─────────────────────────────────────
                         .requestMatchers("/api/usuarios/**")
-                        .hasRole("ADMIN")                        // gestión usuarios ✅
+                        .hasRole("ADMIN")
 
                         // ── CUALQUIER OTRA → autenticado ─────────────────
                         .anyRequest().authenticated()
-
                 )
                 .authenticationProvider(authProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

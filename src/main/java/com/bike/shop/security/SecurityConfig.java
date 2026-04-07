@@ -1,8 +1,8 @@
 package com.bike.shop.security;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,11 +27,16 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final UsuarioRepository usuarioRepository;
+
+    // ✅ Constructor con @Lazy para romper el ciclo
+    public SecurityConfig(@Lazy JwtFilter jwtFilter, UsuarioRepository usuarioRepository) {
+        this.jwtFilter = jwtFilter;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -91,37 +96,29 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        // Bicicletas
                         .requestMatchers(HttpMethod.GET,    "/api/bicicletas/**").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.POST,   "/api/bicicletas").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT,    "/api/bicicletas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/bicicletas/**").hasRole("ADMIN")
-                        // Clientes
                         .requestMatchers(HttpMethod.GET,  "/api/clientes/**").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.POST, "/api/clientes").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.PUT,  "/api/clientes/**").hasAnyRole("ADMIN", "EMPLEADO")
-                        // Ventas
                         .requestMatchers(HttpMethod.POST,  "/api/ventas").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET,   "/api/ventas/mis-ventas/**").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET,   "/api/ventas/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/ventas/**").hasAnyRole("ADMIN", "EMPLEADO")
-                        // Pedidos
                         .requestMatchers(HttpMethod.GET,   "/api/pedidos/**").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.POST,  "/api/pedidos").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/pedidos/recibido/**").hasAnyRole("ADMIN", "EMPLEADO")
-                        // Proveedores
                         .requestMatchers(HttpMethod.GET,    "/api/proveedores/**").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.POST,   "/api/proveedores").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT,    "/api/proveedores/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/proveedores/**").hasRole("ADMIN")
-                        // Dashboard
                         .requestMatchers(HttpMethod.GET, "/api/dashboard").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/dashboard/top-bicicletas").hasRole("ADMIN")
-                        // Reportes
                         .requestMatchers(HttpMethod.GET, "/api/reportes/ventas/pdf/mis-ventas").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/reportes/ventas/excel/mis-ventas").hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/reportes/**").hasRole("ADMIN")
-                        // Usuarios
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

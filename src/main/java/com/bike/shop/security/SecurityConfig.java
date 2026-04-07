@@ -132,7 +132,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/pedidos/recibido/**")
                         .hasAnyRole("ADMIN", "EMPLEADO")
                         .requestMatchers(HttpMethod.GET, "/api/pedidos/**")
-                        .hasRole("ADMIN")
+                        .hasAnyRole("ADMIN", "EMPLEADO")   // ← eliges esta
                         .requestMatchers(HttpMethod.POST, "/api/pedidos")
                         .hasRole("ADMIN")
 

@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/pedidos")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", originPatterns = "https://bike-shop-frontend-production.up.railway.app")
 public class PedidoController {
 
     private final PedidoService pedidoService;

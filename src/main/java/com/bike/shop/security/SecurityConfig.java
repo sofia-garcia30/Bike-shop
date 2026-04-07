@@ -23,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.bike.shop.repository.UsuarioRepository;
 
 import java.util.List;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -66,7 +67,15 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
+
+        // Leer orígenes permitidos desde variable de entorno (separados por coma si hay varios)
+        String allowedOriginsEnv = System.getenv("CORS_ALLOWED_ORIGINS");
+        if (allowedOriginsEnv == null || allowedOriginsEnv.isBlank()) {
+            allowedOriginsEnv = "http://localhost:4200"; // valor por defecto para desarrollo local
+        }
+        List<String> allowedOrigins = Arrays.asList(allowedOriginsEnv.split(","));
+        config.setAllowedOrigins(allowedOrigins);
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

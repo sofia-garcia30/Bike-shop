@@ -114,7 +114,6 @@ VALUES (
 -- $2a$10$AYXdkba1eB/LmJSVKwsjQeF/5F4T2ew1PKA6t7cYTOKspPfzgyiUm
 -- Cambiarla en producción desde el endpoint PUT /api/usuarios/{id}
 
-USE tienda_bicicletas;
 
 -- Eliminar triggers si existen (para recrearlos limpios)
 DROP TRIGGER IF EXISTS check_stock;

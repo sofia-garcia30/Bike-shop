@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS proveedor (
     telefono VARCHAR(20),
     email VARCHAR(100),
     frecuencia_entrega VARCHAR(50)
-    );
+    )$$
 
 -- ==========================================
 -- 2. BICICLETA
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS bicicleta (
     stock_maximo INT DEFAULT 50,
     descripcion TEXT,
     imagen_url VARCHAR(500)
-    );
+    )$$
 
 -- ==========================================
 -- 3. USUARIO
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS usuario (
     rol VARCHAR(20) NOT NULL DEFAULT 'VENDEDOR',
     activo BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
+    )$$
 
 -- ==========================================
 -- 4. CLIENTE
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS cliente (
     telefono VARCHAR(20),
     email VARCHAR(100),
     direccion VARCHAR(200)
-    );
+    )$$
 
 -- ==========================================
 -- 5. PEDIDO
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS pedido (
                                       estado VARCHAR(20) DEFAULT 'pendiente',
     CONSTRAINT fk_pedido_proveedor FOREIGN KEY (id_proveedor) REFERENCES proveedor(id),
     CONSTRAINT fk_pedido_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
-    );
+    )$$
 
 -- ==========================================
 -- 6. DETALLE_PEDIDO
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS detalle_pedido (
                                               precio_costo_unitario DECIMAL(10,2) NOT NULL,
     CONSTRAINT fk_detalle_pedido_pedido FOREIGN KEY (id_pedido) REFERENCES pedido(id),
     CONSTRAINT fk_detalle_pedido_bicicleta FOREIGN KEY (codigo_bicicleta) REFERENCES bicicleta(codigo)
-    );
+    )$$
 
 -- ==========================================
 -- 7. VENTA
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS venta (
     estado VARCHAR(20) DEFAULT 'completada',
     CONSTRAINT fk_venta_cliente FOREIGN KEY (documento_cliente) REFERENCES cliente(documento),
     CONSTRAINT fk_venta_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
-    );
+    )$$
 
 -- ==========================================
 -- 8. DETALLE_VENTA
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS detalle_venta (
     subtotal DECIMAL(10,2),
     CONSTRAINT fk_detalle_venta_venta FOREIGN KEY (id_venta) REFERENCES venta(id),
     CONSTRAINT fk_detalle_venta_bicicleta FOREIGN KEY (codigo_bicicleta) REFERENCES bicicleta(codigo)
-    );
+    )$$
 
 -- ==========================================
 -- 9. USUARIO ADMIN INICIAL
@@ -114,7 +114,7 @@ VALUES (
     'admin@tienda.com',
     '$2a$10$AYXdkba1eB/LmJSVKwsjQeF/5F4T2ew1PKA6t7cYTOKspPfzgyiUm',
     'ADMIN'
-);
+)$$
 
 -- ==========================================
 -- 10. ELIMINAR TRIGGERS SI EXISTEN

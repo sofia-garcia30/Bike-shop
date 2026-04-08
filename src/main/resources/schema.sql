@@ -125,7 +125,7 @@ DROP TRIGGER IF EXISTS actualizar_stock_pedido;
 DROP TRIGGER IF EXISTS devolver_stock_cancelacion;
 
 -- T1: Validar stock
-DELIMITER //
+
 CREATE TRIGGER check_stock
     BEFORE INSERT ON detalle_venta
     FOR EACH ROW
@@ -135,41 +135,41 @@ BEGIN
     IF stock_actual < NEW.cantidad THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Stock insuficiente';
 END IF;
-END; //
-DELIMITER ;
+END;
+
 
 -- T2: Precio automático (SIEMPRE asigna desde bicicleta)
-DELIMITER //
+
 CREATE TRIGGER precio_automatico
     BEFORE INSERT ON detalle_venta
     FOR EACH ROW
 BEGIN
     SET NEW.precio_unitario = (SELECT precio_venta FROM bicicleta WHERE codigo = NEW.codigo_bicicleta);
-END; //
-DELIMITER ;
+END;
+
 
 -- T3: Calcular subtotal
-DELIMITER //
+
 CREATE TRIGGER calc_subtotal
     BEFORE INSERT ON detalle_venta
     FOR EACH ROW
 BEGIN
     SET NEW.subtotal = NEW.cantidad * NEW.precio_unitario;
-END; //
-DELIMITER ;
+END;
+
 
 -- T4: Descontar stock
-DELIMITER //
+
 CREATE TRIGGER update_stock
     AFTER INSERT ON detalle_venta
     FOR EACH ROW
 BEGIN
     UPDATE bicicleta SET cantidad = cantidad - NEW.cantidad WHERE codigo = NEW.codigo_bicicleta;
-END; //
-DELIMITER ;
+END;
+
 
 -- T5: Actualizar total de venta
-DELIMITER //
+
 CREATE TRIGGER update_venta_total
     AFTER INSERT ON detalle_venta
     FOR EACH ROW
@@ -177,11 +177,11 @@ BEGIN
     UPDATE venta SET total = (
         SELECT SUM(subtotal) FROM detalle_venta WHERE id_venta = NEW.id_venta
     ) WHERE id = NEW.id_venta;
-END; //
-DELIMITER ;
+END;
+
 
 -- T6: Sumar stock al recibir pedido
-DELIMITER //
+
 CREATE TRIGGER actualizar_stock_pedido
     AFTER UPDATE ON pedido
     FOR EACH ROW
@@ -192,11 +192,11 @@ BEGIN
         SET b.cantidad = b.cantidad + dp.cantidad
     WHERE dp.id_pedido = NEW.id;
 END IF;
-END; //
-DELIMITER ;
+END;
+
 
 -- T7: Devolver stock al cancelar venta
-DELIMITER //
+
 CREATE TRIGGER devolver_stock_cancelacion
     AFTER UPDATE ON venta
     FOR EACH ROW
@@ -207,5 +207,5 @@ BEGIN
         SET b.cantidad = b.cantidad + dv.cantidad
     WHERE dv.id_venta = NEW.id;
 END IF;
-END; //
-DELIMITER ;
+END;
+

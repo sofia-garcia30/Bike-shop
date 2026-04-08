@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS proveedor (
     telefono VARCHAR(20),
     email VARCHAR(100),
     frecuencia_entrega VARCHAR(50)
-    )$$
+    );
 
 -- ==========================================
 -- 2. BICICLETA
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS bicicleta (
     stock_maximo INT DEFAULT 50,
     descripcion TEXT,
     imagen_url VARCHAR(500)
-    )$$
+    );
 
 -- ==========================================
 -- 3. USUARIO
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS usuario (
     rol VARCHAR(20) NOT NULL DEFAULT 'VENDEDOR',
     activo BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
-    )$$
+    );
 
 -- ==========================================
 -- 4. CLIENTE
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS cliente (
     telefono VARCHAR(20),
     email VARCHAR(100),
     direccion VARCHAR(200)
-    )$$
+    );
 
 -- ==========================================
 -- 5. PEDIDO
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS pedido (
                                       estado VARCHAR(20) DEFAULT 'pendiente',
     CONSTRAINT fk_pedido_proveedor FOREIGN KEY (id_proveedor) REFERENCES proveedor(id),
     CONSTRAINT fk_pedido_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
-    )$$
+    );
 
 -- ==========================================
 -- 6. DETALLE_PEDIDO
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS detalle_pedido (
                                               precio_costo_unitario DECIMAL(10,2) NOT NULL,
     CONSTRAINT fk_detalle_pedido_pedido FOREIGN KEY (id_pedido) REFERENCES pedido(id),
     CONSTRAINT fk_detalle_pedido_bicicleta FOREIGN KEY (codigo_bicicleta) REFERENCES bicicleta(codigo)
-    )$$
+    );
 
 -- ==========================================
 -- 7. VENTA
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS venta (
     estado VARCHAR(20) DEFAULT 'completada',
     CONSTRAINT fk_venta_cliente FOREIGN KEY (documento_cliente) REFERENCES cliente(documento),
     CONSTRAINT fk_venta_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
-    )$$
+    );
 
 -- ==========================================
 -- 8. DETALLE_VENTA
@@ -103,99 +103,9 @@ CREATE TABLE IF NOT EXISTS detalle_venta (
     subtotal DECIMAL(10,2),
     CONSTRAINT fk_detalle_venta_venta FOREIGN KEY (id_venta) REFERENCES venta(id),
     CONSTRAINT fk_detalle_venta_bicicleta FOREIGN KEY (codigo_bicicleta) REFERENCES bicicleta(codigo)
-    )$$
+    );
 
 -- ==========================================
 -- 9. USUARIO ADMIN INICIAL
 -- ==========================================
-INSERT IGNORE INTO usuario (nombre, email, password, rol)
-VALUES (
-    'Administrador',
-    'admin@tienda.com',
-    '$2a$10$AYXdkba1eB/LmJSVKwsjQeF/5F4T2ew1PKA6t7cYTOKspPfzgyiUm',
-    'ADMIN'
-)$$
-
--- ==========================================
--- 10. ELIMINAR TRIGGERS SI EXISTEN
--- ==========================================
--- DROP TRIGGER IF EXISTS check_stock;
--- DROP TRIGGER IF EXISTS precio_automatico;
--- DROP TRIGGER IF EXISTS calc_subtotal;
--- DROP TRIGGER IF EXISTS update_stock;
--- DROP TRIGGER IF EXISTS update_venta_total;
--- DROP TRIGGER IF EXISTS actualizar_stock_pedido;
--- DROP TRIGGER IF EXISTS devolver_stock_cancelacion;
-
-
--- 11. CREAR TRIGGERS (con DELIMITER $$)
--- ==========================================
-
---DELIMITER $$
-
---CREATE TRIGGER check_stock
-  --  BEFORE INSERT ON detalle_venta
-    --FOR EACH ROW
---BEGIN
-  ---  DECLARE stock_actual INT;
-    --SELECT cantidad INTO stock_actual FROM bicicleta WHERE codigo = NEW.codigo_bicicleta;
-    --IF stock_actual < NEW.cantidad THEN
-      --  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Stock insuficiente';
---END IF;
---END$$
-
---CREATE TRIGGER precio_automatico
-  --  BEFORE INSERT ON detalle_venta
-    --FOR EACH ROW
---BEGIN
-  --  SET NEW.precio_unitario = (SELECT precio_venta FROM bicicleta WHERE codigo = NEW.codigo_bicicleta);
---END$$
-
-  --  CREATE TRIGGER calc_subtotal
-    --    BEFORE INSERT ON detalle_venta
-      --  FOR EACH ROW
-   -- BEGIN
-     --   SET NEW.subtotal = NEW.cantidad * NEW.precio_unitario;
---END$$
-
-  --      CREATE TRIGGER update_stock
-    --        AFTER INSERT ON detalle_venta
-      --      FOR EACH ROW
-        --BEGIN
-          --  UPDATE bicicleta SET cantidad = cantidad - NEW.cantidad WHERE codigo = NEW.codigo_bicicleta;
-            --END$$
-
-            --CREATE TRIGGER update_venta_total
-              --  AFTER INSERT ON detalle_venta
-                --FOR EACH ROW
-            --BEGIN
-              --  UPDATE venta SET total = (
-                --    SELECT SUM(subtotal) FROM detalle_venta WHERE id_venta = NEW.id_venta
-                --) WHERE id = NEW.id_venta;
-                --END$$
-
-                --CREATE TRIGGER actualizar_stock_pedido
-                 --   AFTER UPDATE ON pedido
-                   -- FOR EACH ROW
-                --BEGIN
-                  --  IF NEW.estado = 'recibido' AND OLD.estado = 'pendiente' THEN
-                    --UPDATE bicicleta b
-                      --  INNER JOIN detalle_pedido dp ON dp.codigo_bicicleta = b.codigo
-                        --SET b.cantidad = b.cantidad + dp.cantidad
-                    --WHERE dp.id_pedido = NEW.id;
-                --END IF;
-                --END$$
-
-                --CREATE TRIGGER devolver_stock_cancelacion
-                --    AFTER UPDATE ON venta
-                  --  FOR EACH ROW
-                --BEGIN
-                  --  IF NEW.estado = 'devuelta' AND OLD.estado = 'completada' THEN
-                    --UPDATE bicicleta b
-                      --  INNER JOIN detalle_venta dv ON dv.codigo_bicicleta = b.codigo
-                        --SET b.cantidad = b.cantidad + dv.cantidad
-                   -- WHERE dv.id_venta = NEW.id;
-                --END IF;
-                --END$$
-
-                --DELIMITER ;
+    INSERT IGNORE INTO usuario (nombre, email, password, rol) VALUES ('Administrador', 'admin@tienda.com', '$2a$10$AYXdkba1eB/LmJSVKwsjQeF/5F4T2ew1PKA6t7cYTOKspPfzgyiUm', 'ADMIN')$$
